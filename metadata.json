@@ -1,0 +1,5 @@
+{
+  "name": "Kissan and Co",
+  "description": "A minimal, smart farm intelligence dashboard for visualizing land layout and actionable farming insights.",
+  "requestFramePermissions": ["geolocation"]
+}
