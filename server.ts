@@ -4,11 +4,17 @@ import Database from "better-sqlite3";
 import path from "path";
 import { fileURLToPath } from "url";
 import { GoogleGenAI } from "@google/genai";
+import dotenv from "dotenv";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Support local development via .env.local/.env
+dotenv.config({ path: ".env.local" });
+dotenv.config();
+
 // Initialize Gemini
-const genAI = new GoogleGenAI({ apiKey: process.env.API_KEY || process.env.GEMINI_API_KEY });
+const geminiApiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+const genAI = geminiApiKey ? new GoogleGenAI({ apiKey: geminiApiKey }) : null;
 
 // Initialize Database
 const db = new Database("farm.db");
@@ -105,11 +111,17 @@ async function startServer() {
   // Weather Proxy (WeatherAPI.com)
   app.get("/api/weather", async (req, res) => {
     const { lat, lon } = req.query;
-    // Use environment variable or fallback to the known working key for this demo
-    const apiKey = process.env.WEATHER_API_KEY || "ad3467e9c5b44fa78a9101203262102"; 
+    const apiKey = process.env.WEATHER_API_KEY;
     
     if (!lat || !lon) {
         return res.status(400).json({ error: "Missing lat/lon" });
+    }
+
+    if (!apiKey) {
+      return res.json({
+        current: { temp_c: 28, condition: { text: "Sunny", icon: "//cdn.weatherapi.com/weather/64x64/day/113.png" }, wind_kph: 12, humidity: 45 },
+        forecast: { forecastday: [] }
+      });
     }
 
     try {
@@ -135,6 +147,14 @@ async function startServer() {
     const { farm, weather } = req.body;
     
     try {
+        if (!genAI) {
+            return res.json({
+                irrigation: { monthly_forecast: 3000, recommendation: "Set GEMINI_API_KEY in .env.local for AI-backed recommendations." },
+                financials: { projected_revenue: { min: 100000, max: 150000 }, projected_profit: { min: 50000, max: 80000 }, confidence_score: 80 },
+                invoice: []
+            });
+        }
+
         const prompt = `
             Act as an agricultural economist.
             
@@ -249,6 +269,34 @@ async function startServer() {
     const { farm, weather, context } = req.body;
     
     try {
+        if (!genAI) {
+            if (!context || context.step === "initial") {
+                return res.json({
+                    type: "question",
+                    questions: [
+                        { id: "q1", text: "What is your top crop priority this season: yield, stability, or profit?" },
+                        { id: "q2", text: "How much irrigation flexibility do you have in the next 30 days?" },
+                        { id: "q3", text: "What is your tolerance for market price volatility?" }
+                    ]
+                });
+            }
+
+            return res.json({
+                type: "result",
+                critique: "Running in fallback mode. Add GEMINI_API_KEY in .env.local for model-generated recommendations.",
+                suggestions: [
+                    {
+                        title: "Diversify across water-resilient crops",
+                        zone: "Primary zone",
+                        score: 82,
+                        description: "Current conditions favor balanced risk across 2-3 crops.",
+                        action: "Allocate 60% to core crop and 40% to short-duration alternatives.",
+                        metrics: { yield: "Moderate", profit: "Stable" }
+                    }
+                ]
+            });
+        }
+
         let prompt = "";
         
         if (!context || context.step === 'initial') {
@@ -318,6 +366,14 @@ async function startServer() {
     const { farm, conditions } = req.body;
     
     try {
+        if (!genAI) {
+            return res.json({
+                crops: [{ name: "Millet", confidence: 78, reason: "Handles heat and variable rainfall better than many alternatives." }],
+                impact: { profit: "Neutral to +8%", yield: "Moderate", risk: "Medium" },
+                irrigation_advice: "Use interval-based irrigation and prioritize morning watering to reduce loss."
+            });
+        }
+
         const prompt = `
             Act as an agricultural simulator.
             

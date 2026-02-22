@@ -578,12 +578,12 @@ export default function App() {
           ) : activeTab === 'simulator' ? (
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
+                <div className="p-2 bg-emerald-100 rounded-lg text-emerald-700">
                   <Activity size={24} />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Farm Simulator</h2>
-                  <p className="text-gray-500 text-sm">Test different environmental conditions to plan ahead.</p>
+                  <h2 className="text-2xl font-bold text-gray-900">Risk-Aware Farm Strategy</h2>
+                  <p className="text-gray-500 text-sm">Simulate uncertainty before sowing and compare survival outcomes.</p>
                 </div>
               </div>
               <FarmSimulator farm={farm} />

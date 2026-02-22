@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'motion/react';
+import { Compass, Waves, Route } from 'lucide-react';
 
 interface FarmMapProps {
   zones: any[];
@@ -8,132 +9,171 @@ interface FarmMapProps {
   selectedZoneId?: number | null;
 }
 
+interface ZoneShape {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  path: string;
+}
+
+function cropPalette(crop: string | undefined, status: string | undefined, mode: 'layout' | 'satellite') {
+  if (mode === 'satellite') {
+    if (status !== 'Active') return { fill: '#7c8a5d', stroke: '#5f6f45' };
+    if (!crop) return { fill: '#7b8f63', stroke: '#5f7348' };
+    const key = crop.toLowerCase();
+    if (key.includes('rice')) return { fill: '#4f8a54', stroke: '#396741' };
+    if (key.includes('wheat')) return { fill: '#a49355', stroke: '#7f733e' };
+    if (key.includes('cotton')) return { fill: '#8f9e79', stroke: '#6f7e5d' };
+    if (key.includes('sugarcane')) return { fill: '#538b68', stroke: '#3f6d51' };
+    return { fill: '#678d60', stroke: '#4f6d4b' };
+  }
+
+  if (status !== 'Active') return { fill: '#E5E7EB', stroke: '#D1D5DB' };
+  if (!crop) return { fill: '#D1FAE5', stroke: '#6EE7B7' };
+  const key = crop.toLowerCase();
+  if (key.includes('rice')) return { fill: '#DCFCE7', stroke: '#4ADE80' };
+  if (key.includes('wheat')) return { fill: '#FEF9C3', stroke: '#FACC15' };
+  if (key.includes('cotton')) return { fill: '#FFFFFF', stroke: '#E5E7EB' };
+  if (key.includes('sugarcane')) return { fill: '#CCFBF1', stroke: '#2DD4BF' };
+  return { fill: '#DBEAFE', stroke: '#60A5FA' };
+}
+
 export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapProps) {
-  // Canvas dimensions
-  const width = 800;
-  const height = 600;
-  const padding = 60;
-  
-  // Calculate grid layout
-  // In a real app, we would use real coordinates (lat/lon) mapped to SVG space
-  // Here we simulate a nice layout
+  const [mode, setMode] = useState<'layout' | 'satellite'>('layout');
+
+  const width = 900;
+  const height = 640;
+  const padding = 55;
   const cols = 3;
-  const rows = Math.ceil(zones.length / cols);
-  
+  const rows = Math.ceil(Math.max(1, zones.length) / cols);
   const cellWidth = (width - padding * 2) / cols;
   const cellHeight = (height - padding * 2) / Math.max(2, rows);
-  const gap = 20;
+  const gap = 18;
+
+  const zoneShapes = useMemo<ZoneShape[]>(() => {
+    return zones.map((_, index) => {
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+
+      const x = padding + col * cellWidth + gap / 2;
+      const y = padding + row * cellHeight + gap / 2;
+      const w = cellWidth - gap;
+      const h = cellHeight - gap;
+
+      const path = `
+        M ${x + 12} ${y}
+        H ${x + w - 14}
+        Q ${x + w} ${y + 8} ${x + w} ${y + 20}
+        V ${y + h - 14}
+        Q ${x + w - 6} ${y + h} ${x + w - 18} ${y + h}
+        H ${x + 14}
+        Q ${x} ${y + h - 8} ${x} ${y + h - 22}
+        V ${y + 14}
+        Q ${x + 6} ${y} ${x + 12} ${y}
+        Z
+      `;
+
+      return { x, y, w, h, path };
+    });
+  }, [zones]);
 
   return (
-    <div className="w-full h-full min-h-[300px] md:min-h-[500px] bg-[#F3F4F6] rounded-3xl relative overflow-hidden shadow-inner border border-gray-200 group">
-      {/* Background Texture */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none" 
-           style={{ backgroundImage: 'radial-gradient(#9CA3AF 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
-      </div>
+    <div className="w-full h-full min-h-[320px] md:min-h-[520px] rounded-3xl relative overflow-hidden shadow-inner border border-gray-200 group">
+      <div
+        className={`absolute inset-0 ${mode === 'satellite' ? 'bg-[#5d6f49]' : 'bg-[#F3F4F6]'}`}
+        style={
+          mode === 'satellite'
+            ? {
+                backgroundImage:
+                  'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 40%), radial-gradient(circle at 80% 25%, rgba(0,0,0,0.14), transparent 40%), linear-gradient(135deg, #5f724a 0%, #6e8158 50%, #77895f 100%)',
+              }
+            : {
+                backgroundImage: 'radial-gradient(#9CA3AF 1px, transparent 1px)',
+                backgroundSize: '22px 22px',
+                opacity: 0.25,
+              }
+        }
+      />
 
-      {/* SVG Canvas */}
-      <svg 
-        viewBox={`0 0 ${width} ${height}`} 
-        className="w-full h-full absolute inset-0"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        {/* Farm Boundary */}
-        <path 
-          d={`M ${padding/2} ${padding/2} H ${width - padding/2} V ${height - padding/2} H ${padding/2} Z`}
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full absolute inset-0" preserveAspectRatio="xMidYMid meet">
+        <path
+          d={`M ${padding / 2} ${padding / 2} H ${width - padding / 2} V ${height - padding / 2} H ${padding / 2} Z`}
           fill="none"
-          stroke="#E5E7EB"
+          stroke={mode === 'satellite' ? 'rgba(226,232,240,0.45)' : '#D1D5DB'}
           strokeWidth="2"
           strokeDasharray="10,10"
         />
 
-        {/* Zones */}
-        {zones.map((zone, index) => {
-          const col = index % cols;
-          const row = Math.floor(index / cols);
-          
-          const x = padding + col * cellWidth + gap/2;
-          const y = padding + row * cellHeight + gap/2;
-          const w = cellWidth - gap;
-          const h = cellHeight - gap;
-          
-          const isSelected = selectedZoneId === zone.id;
+        <path
+          d={`M ${padding - 8} ${height * 0.28} C ${width * 0.3} ${height * 0.22}, ${width * 0.45} ${height * 0.34}, ${width - padding + 6} ${height * 0.25}`}
+          stroke={mode === 'satellite' ? 'rgba(191,219,254,0.45)' : 'rgba(59,130,246,0.25)'}
+          strokeWidth="5"
+          fill="none"
+          strokeDasharray="12,8"
+        />
 
-          // Determine color based on crop
-          let fillColor = "#F3F4F6"; // Default
-          let strokeColor = "#D1D5DB";
-          
-          if (zone.status === 'Active') {
-            if (zone.crop?.toLowerCase().includes('wheat')) { fillColor = "#FEF9C3"; strokeColor = "#FACC15"; } // Yellow
-            else if (zone.crop?.toLowerCase().includes('rice')) { fillColor = "#DCFCE7"; strokeColor = "#4ADE80"; } // Green
-            else if (zone.crop?.toLowerCase().includes('cotton')) { fillColor = "#FFFFFF"; strokeColor = "#E5E7EB"; } // White
-            else if (zone.crop?.toLowerCase().includes('sugarcane')) { fillColor = "#D1FAE5"; strokeColor = "#34D399"; } // Teal
-            else { fillColor = "#E0F2FE"; strokeColor = "#38BDF8"; } // Blue
-          }
+        <path
+          d={`M ${padding - 6} ${height * 0.72} Q ${width * 0.5} ${height * 0.62} ${width - padding + 6} ${height * 0.75}`}
+          stroke={mode === 'satellite' ? 'rgba(203,213,225,0.45)' : 'rgba(148,163,184,0.5)'}
+          strokeWidth="8"
+          fill="none"
+        />
+
+        {zones.map((zone, index) => {
+          const shape = zoneShapes[index];
+          if (!shape) return null;
+
+          const isSelected = selectedZoneId === zone.id;
+          const palette = cropPalette(zone.crop, zone.status, mode);
 
           return (
-            <g 
-              key={zone.id || index} 
-              onClick={() => onSelectZone(zone)}
-              className="cursor-pointer transition-all duration-300"
-              style={{ transformOrigin: `${x + w/2}px ${y + h/2}px` }}
-            >
-              {/* Shadow */}
-              <rect
-                x={x + 4} y={y + 4}
-                width={w} height={h}
-                rx="12"
-                fill="rgba(0,0,0,0.05)"
-                className="transition-all duration-300"
-                style={{ opacity: isSelected ? 0.2 : 0.05 }}
+            <g key={zone.id || index} onClick={() => onSelectZone(zone)} className="cursor-pointer" style={{ transformOrigin: `${shape.x + shape.w / 2}px ${shape.y + shape.h / 2}px` }}>
+              <path
+                d={shape.path}
+                fill="rgba(0,0,0,0.18)"
+                transform="translate(4 5)"
+                opacity={mode === 'satellite' ? 0.22 : 0.08}
               />
 
-              {/* Zone Shape */}
-              <motion.rect
+              <motion.path
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: isSelected ? 1.02 : 1 }}
-                transition={{ delay: index * 0.05 }}
-                x={x} y={y}
-                width={w} height={h}
-                rx="12"
-                fill={fillColor}
-                stroke={isSelected ? "#16A34A" : strokeColor}
-                strokeWidth={isSelected ? 3 : 1}
-                className="hover:opacity-90"
+                animate={{ opacity: 1, scale: isSelected ? 1.03 : 1 }}
+                transition={{ delay: index * 0.04 }}
+                d={shape.path}
+                fill={palette.fill}
+                stroke={isSelected ? '#22C55E' : palette.stroke}
+                strokeWidth={isSelected ? 3 : 1.5}
+                className="hover:opacity-95"
               />
-              
-              {/* Irrigation Lines (Animated) */}
+
               {zone.waterAccess && (
-                <g opacity="0.4">
-                  {[1, 2, 3].map(i => (
-                    <line 
+                <g opacity={mode === 'satellite' ? 0.5 : 0.4}>
+                  {[1, 2, 3].map((i) => (
+                    <line
                       key={i}
-                      x1={x} y1={y + (h/4)*i} 
-                      x2={x + w} y2={y + (h/4)*i} 
-                      stroke="#3B82F6" 
-                      strokeWidth="1.5"
-                      strokeDasharray="4,4"
+                      x1={shape.x + 10}
+                      y1={shape.y + (shape.h / 4) * i}
+                      x2={shape.x + shape.w - 10}
+                      y2={shape.y + (shape.h / 4) * i}
+                      stroke={mode === 'satellite' ? '#BFDBFE' : '#3B82F6'}
+                      strokeWidth="1.6"
+                      strokeDasharray="5,4"
                     />
                   ))}
                 </g>
               )}
 
-              {/* Label */}
-              <foreignObject x={x} y={y} width={w} height={h} className="pointer-events-none">
-                <div className="w-full h-full flex flex-col items-center justify-center p-2 text-center">
-                  <span className="font-display font-bold text-gray-800 text-lg tracking-tight">
+              <foreignObject x={shape.x + 8} y={shape.y + 8} width={shape.w - 16} height={shape.h - 16} className="pointer-events-none">
+                <div className="w-full h-full flex flex-col items-center justify-center text-center">
+                  <span className={`font-display font-bold text-base tracking-tight ${mode === 'satellite' ? 'text-white drop-shadow' : 'text-gray-800'}`}>
                     {zone.name}
                   </span>
-                  {zone.status === 'Active' && (
-                    <span className="text-xs font-medium text-gray-500 mt-1 bg-white/60 px-2 py-0.5 rounded-full backdrop-blur-sm">
-                      {zone.crop}
-                    </span>
-                  )}
+                  <span className={`text-[11px] mt-1 px-2 py-0.5 rounded-full ${mode === 'satellite' ? 'bg-black/30 text-gray-100' : 'bg-white/70 text-gray-500'}`}>
+                    {zone.crop || 'Fallow'}
+                  </span>
                   {isSelected && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-2 text-[10px] text-green-700 font-bold bg-green-100 px-2 py-0.5 rounded-full"
-                    >
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="mt-2 text-[10px] text-green-700 font-bold bg-green-100 px-2 py-0.5 rounded-full">
                       SELECTED
                     </motion.div>
                   )}
@@ -144,13 +184,36 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
         })}
       </svg>
 
-      {/* Controls */}
-      <div className="absolute bottom-4 right-4 flex gap-2">
+      <div className="absolute top-4 left-4 flex items-center gap-2">
+        <button
+          onClick={() => setMode('layout')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${mode === 'layout' ? 'bg-white text-gray-800 border-gray-300' : 'bg-white/70 text-gray-500 border-gray-200'}`}
+        >
+          Layout
+        </button>
+        <button
+          onClick={() => setMode('satellite')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${mode === 'satellite' ? 'bg-emerald-600 text-white border-emerald-500' : 'bg-white/70 text-gray-500 border-gray-200'}`}
+        >
+          Satellite Mock
+        </button>
+      </div>
+
+      <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
+        <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-gray-200 text-xs font-medium text-gray-600 flex items-center gap-1.5">
+          <Compass size={12} /> N
+        </div>
+        <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-gray-200 text-xs font-medium text-gray-600">
+          {area || '--'} acres
+        </div>
+      </div>
+
+      <div className="absolute bottom-4 right-4 flex flex-wrap gap-2 justify-end max-w-[70%]">
         <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-gray-200 text-xs font-medium text-gray-600 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-blue-400"></div> Irrigated
+          <Waves size={12} className="text-blue-500" /> Irrigated
         </div>
         <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-gray-200 text-xs font-medium text-gray-600 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-green-400"></div> Active
+          <Route size={12} className="text-slate-500" /> Access road
         </div>
       </div>
     </div>
