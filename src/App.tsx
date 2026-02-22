@@ -38,6 +38,7 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEditingFarm, setIsEditingFarm] = useState(false);
+  const [lang, setLang] = useState<'en' | 'hi' | 'kn' | 'ta'>('en');
 
   // AI & Finance State
   const [aiState, setAiState] = useState<'initial' | 'questions' | 'results'>('initial');
@@ -422,6 +423,7 @@ export default function App() {
             {[
               { id: 'ai-suggestions', icon: BrainCircuit, label: 'AI Advisor' },
               { id: 'simulator', icon: Activity, label: 'Simulator' },
+              { id: 'diagnosis', icon: Leaf, label: 'Crop Doctor' },
             ].map((item) => (
               <button
                 key={item.id}
@@ -471,32 +473,21 @@ export default function App() {
             ))}
           </div>
 
-          {/* Help Group */}
+          {/* Tutorial only */}
           <div className="space-y-1.5">
-            {(isSidebarOpen || isMobileMenuOpen) && <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">{'Help'}</p>}
-            {[
-              { id: 'community', icon: Users, label: 'Community', color: 'pink' },
-              { id: 'diagnosis', icon: Leaf, label: 'Crop Doctor', color: 'teal' },
-              { id: 'tutorial', icon: FileText, label: 'Tutorial', color: 'yellow' },
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden
-                  ${activeTab === item.id
-                    ? 'bg-yellow-50 text-yellow-700 shadow-sm ring-1 ring-yellow-100'
-                    : 'text-gray-500 hover:bg-yellow-50/50 hover:text-yellow-700'
-                  }`}
-                title={!isSidebarOpen ? item.label : ''}
-              >
-                {activeTab === item.id && <motion.div layoutId="activeTab" className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-500 rounded-r-full" />}
-                <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} className={`min-w-[20px] transition-colors ${activeTab === item.id ? 'text-yellow-600' : 'text-gray-400 group-hover:text-yellow-500'}`} />
-                {(isSidebarOpen || isMobileMenuOpen) && <span>{item.label}</span>}
-              </button>
-            ))}
+            <button
+              onClick={() => { setActiveTab('tutorial'); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden
+                ${activeTab === 'tutorial'
+                  ? 'bg-gray-100 text-gray-900 shadow-sm'
+                  : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'
+                }`}
+              title={!isSidebarOpen ? 'Tutorial' : ''}
+            >
+              {activeTab === 'tutorial' && <motion.div layoutId="activeTab" className="absolute left-0 top-0 bottom-0 w-1 bg-gray-400 rounded-r-full" />}
+              <FileText size={20} strokeWidth={activeTab === 'tutorial' ? 2.5 : 2} className={`min-w-[20px] transition-colors ${activeTab === 'tutorial' ? 'text-gray-700' : 'text-gray-300 group-hover:text-gray-500'}`} />
+              {(isSidebarOpen || isMobileMenuOpen) && <span>Tutorial</span>}
+            </button>
           </div>
         </nav>
 
@@ -533,6 +524,23 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-3 md:gap-8">
+            {/* Language Switcher */}
+            {(isSidebarOpen || isMobileMenuOpen || true) && (
+              <div className="flex items-center gap-0.5 bg-gray-100 p-0.5 rounded-lg border border-gray-200">
+                {(['en', 'hi', 'kn', 'ta'] as const).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLang(l)}
+                    className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all ${lang === l
+                      ? 'bg-white text-green-700 shadow-sm border border-gray-200'
+                      : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                  >
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {weather?.current && (
               <div className="flex items-center gap-4 pl-6 md:border-l border-gray-200">
@@ -959,42 +967,59 @@ export default function App() {
                 </Card>
               )}
 
-              {aiState === 'questions' && (
-                <Card className="max-w-2xl mx-auto overflow-hidden">
-                  <div className="bg-purple-50 p-6 border-b border-purple-100">
-                    <h3 className="text-lg font-bold text-purple-900">Quick Farm Assessment</h3>
-                    <p className="text-purple-700 text-sm mt-1">Answer a few questions to get personalised crop advice.</p>
-                  </div>
-                  <div className="p-8 space-y-6">
-                    {[
-                      { id: 'budget', text: 'What is your budget for this season?', options: ['low', 'medium', 'high', 'very_high'] },
-                      { id: 'water_source', text: 'What is your primary water source?', options: ['canal', 'borewell', 'river', 'rain'] },
-                      { id: 'experience', text: 'How many years of farming experience do you have?', options: ['beginner', '1-3 years', '4-10 years', '10+ years'] },
-                      { id: 'goal', text: 'What is your primary farming goal?', options: ['profit', 'subsistence', 'water_saving', 'experiment'] },
-                      { id: 'labour', text: 'What labour do you have available?', options: ['self', 'family', 'hired', 'all'] },
-                    ].map((q) => (
-                      <div key={q.id}>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">{q.text}</label>
-                        <input
-                          type="text"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all bg-gray-50 focus:bg-white"
-                          placeholder="Type your answer here..."
-                          onChange={(e) => setAiAnswers({ ...aiAnswers, [q.id]: e.target.value })}
-                        />
+              {aiState === 'questions' && (() => {
+                const AI_QUESTIONS = [
+                  { id: 'budget', emoji: '💰', text: 'How much money can you spend this season?', options: ['Under ₹10,000', '₹10,000 – ₹50,000', '₹50,000 – ₹1,00,000', 'More than ₹1,00,000'] },
+                  { id: 'water_source', emoji: '💧', text: 'Where do you get water for your farm?', options: ['Rainwater only', 'Borewell / Tubewell', 'Canal / River', 'Drip / Sprinkler system'] },
+                  { id: 'experience', emoji: '🌾', text: 'How long have you been farming?', options: ['Just starting out (0–2 years)', 'A few years (3–7 years)', 'Experienced (8–15 years)', 'Veteran (15+ years)'] },
+                  { id: 'goal', emoji: '🎯', text: 'What is your main goal this season?', options: ['Maximise profit', 'Feed my family', 'Save water', 'Try something new'] },
+                  { id: 'labour', emoji: '👨‍🌾', text: 'How much labour do you have?', options: ['Only myself', 'My family helps', 'I hire workers', 'Full team available'] },
+                ];
+                const answeredCount = Object.keys(aiAnswers).length;
+                return (
+                  <Card className="max-w-2xl mx-auto overflow-hidden">
+                    <div className="bg-purple-50 p-6 border-b border-purple-100 flex items-start justify-between">
+                      <div>
+                        <h3 className="text-lg font-bold text-purple-900">Quick Farm Survey</h3>
+                        <p className="text-purple-600 text-sm mt-0.5">Answer a few simple questions — no typing needed!</p>
                       </div>
-                    ))}
-                    <div className="pt-4">
-                      <button
-                        onClick={submitAiAnswers}
-                        disabled={loadingAI}
-                        className="w-full py-3.5 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/20"
-                      >
-                        {loadingAI ? '' : ''}
-                      </button>
+                      <span className="text-xs font-bold px-3 py-1.5 bg-white text-purple-700 border border-purple-200 rounded-full shadow-sm whitespace-nowrap">{answeredCount}/5 done</span>
                     </div>
-                  </div>
-                </Card>
-              )}
+                    <div className="p-6 space-y-6">
+                      {AI_QUESTIONS.map((q) => (
+                        <div key={q.id}>
+                          <p className="flex items-center gap-2 text-sm font-semibold text-gray-800 mb-3">
+                            <span className="text-lg">{q.emoji}</span> {q.text}
+                          </p>
+                          <div className="grid grid-cols-2 gap-2.5">
+                            {q.options.map((opt) => (
+                              <button
+                                key={opt}
+                                onClick={() => setAiAnswers(prev => ({ ...prev, [q.id]: opt }))}
+                                className={`px-4 py-3 rounded-xl border-2 text-sm font-medium text-left transition-all ${aiAnswers[q.id] === opt
+                                  ? 'border-purple-500 bg-purple-50 text-purple-800 shadow-sm'
+                                  : 'border-gray-200 bg-white text-gray-600 hover:border-purple-200 hover:bg-purple-50/50'
+                                  }`}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                      <div className="pt-2">
+                        <button
+                          onClick={submitAiAnswers}
+                          disabled={loadingAI || answeredCount < 5}
+                          className="w-full py-3.5 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {loadingAI ? '🔄 Analysing...' : answeredCount < 5 ? `Answer all questions (${answeredCount}/5 done)` : '✨ Get My Crop Advice'}
+                        </button>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })()}
 
               {aiState === 'results' && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1410,7 +1435,7 @@ export default function App() {
       </Modal>
 
       {/* Floating multilingual voice assistant */}
-      <VoiceAssistant lang="en" />
+      <VoiceAssistant lang={lang} />
     </div >
   );
 }
