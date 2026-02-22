@@ -10,6 +10,9 @@ import { FarmMap } from './components/FarmMap';
 import { Card, StatCard } from './components/ui/Card';
 import { Modal } from './components/ui/Modal';
 import { LandForm } from './components/LandForm';
+import VoiceOnboard from './components/VoiceOnboard';
+import VoiceButton from './components/ui/VoiceButton';
+import { t } from './i18n';
 import { FarmSimulator } from './components/FarmSimulator';
 import { SocialFeed } from './components/SocialFeed';
 import VoiceButton from './components/ui/VoiceButton';
@@ -375,7 +378,7 @@ export default function App() {
   };
 
   if (loading) return <div className="flex items-center justify-center h-screen text-green-600">Loading Kissan and Co...</div>;
-  if (!farm) return <LandForm onSubmit={handleCreateFarm} />;
+  if (!farm) return <VoiceOnboard onComplete={handleCreateFarm} language={'kn'} />;
 
   return (
     <div className="flex h-screen bg-[#F2F4F1] overflow-hidden font-sans text-gray-900 selection:bg-green-100 selection:text-green-900">
@@ -658,9 +661,14 @@ export default function App() {
             <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white shadow-md overflow-hidden">
                 <img src="https://picsum.photos/seed/farmer/200/200" alt="Profile" className="w-full h-full object-cover" />
             </div>
+<<<<<<< HEAD
             <div className="hidden md:flex items-center gap-3">
               <div className={`w-2 h-2 rounded-full ${voiceActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-300'}`} title={voiceActive ? 'Voice playing' : 'Voice idle'} />
               <VoiceButton lang={'kn'} className="hidden lg:inline-flex" text={t('kn','greeting')} />
+=======
+            <div className="hidden md:block">
+              <VoiceButton text={t('kn','greeting')} lang={'kn'} />
+>>>>>>> 5704ac7 (New Commit)
             </div>
           </div>
         </header>

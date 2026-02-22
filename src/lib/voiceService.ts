@@ -1,5 +1,6 @@
 let audioEl: HTMLAudioElement | null = null;
 let currentAbort: AbortController | null = null;
+<<<<<<< HEAD
 let speechSynthesisUtterance: SpeechSynthesisUtterance | null = null;
 
 let lastError: any = null;
@@ -85,12 +86,20 @@ export async function speak(text: string, lang: 'kn'|'hi'|'en' = 'kn') {
       try { currentAbort && currentAbort.abort(); } catch(_) {}
     }, timeoutMs);
 
+=======
+
+export async function speak(text: string, lang: 'kn'|'hi'|'en' = 'kn') {
+  try {
+    stop();
+    currentAbort = new AbortController();
+>>>>>>> 5704ac7 (New Commit)
     const res = await fetch('/api/voice', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text, language: lang }),
       signal: currentAbort.signal
     });
+<<<<<<< HEAD
     clearTimeout(timeout);
 
     if (!res.ok) {
@@ -138,6 +147,16 @@ export async function speak(text: string, lang: 'kn'|'hi'|'en' = 'kn') {
     setFailure(e);
     emit('voice:stop');
     throw e;
+=======
+    if (!res.ok) throw new Error('Voice request failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    audioEl = new Audio(url);
+    audioEl.onended = () => { URL.revokeObjectURL(url); audioEl = null; };
+    await audioEl.play();
+  } catch (e) {
+    console.error('speak error', e);
+>>>>>>> 5704ac7 (New Commit)
   }
 }
 
@@ -150,6 +169,7 @@ export function stop() {
     try { audioEl.pause(); audioEl.currentTime = 0; } catch(_) {}
     audioEl = null;
   }
+<<<<<<< HEAD
   if (speechSynthesisUtterance) {
     try { window.speechSynthesis.cancel(); } catch(_) {}
     speechSynthesisUtterance = null;
@@ -201,3 +221,8 @@ export function isAvailable() { return available || useBrowserFallback; }
 export function getLastError() { return lastError; }
 
 export default { speak, stop, checkAvailability, retryAvailability, notifyVoiceFailure, isAvailable, getLastError };
+=======
+}
+
+export default { speak, stop };
+>>>>>>> 5704ac7 (New Commit)

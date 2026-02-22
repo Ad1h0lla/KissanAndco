@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const translations: Record<string, Record<string, string>> = {
   en: {
     // Header & Navigation
@@ -582,6 +583,52 @@ const translations: Record<string, Record<string, string>> = {
 export function t(lang: string | undefined, key: string) {
   const l = (lang || 'kn').split('-')[0];
   return (translations[l] && translations[l][key]) || translations['en'][key] || key;
+=======
+const strings: Record<string, Record<string, string>> = {
+  kn: {
+    greeting: 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ರಸ್ತೆಗಾರ ಸಲಹೆಗಾರ. ನಿಮ್ಮ ಭೂಮಿಯ ಮಾಹಿತಿಯನ್ನು ತಲುಪಿಸೋಣ.',
+    ask_location: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಭೂಮಿಯ ಸ್ಥಳವನ್ನು ಹೇಳಿ (ಉದಾಹರಣೆ: ಗ್ರಾಮ, ಜಿಲ್ಲ)',
+    ask_area: 'ಭೂಮಿಯ ಗಾತ್ರವನ್ನು ಎಕರೆಗಳಲ್ಲಿ ತಿಳಿಸಿ.',
+    ask_crop: 'ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಬೆಳೆ ಯಾವುದು?',
+    confirm: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಸೃಷ್ಟಿಸಲು "ದೃಢೀಕರಿಸಿ" ಕ್ಲಿಕ್ ಮಾಡಿ.',
+    listen: 'ಕೇಳಿ',
+    next: 'ಮುಂದೆ',
+    back: 'ಹಿಂದೆ',
+    confirm_btn: 'ದೃಢೀಕರಿಸಿ',
+    creating: 'ಭೂಮಿಯನ್ನು ಸೃಷ್ಟಿಸಲಾಗುತ್ತಿದೆ...',
+    created: 'ಭೂಮಿಯನ್ನು ಸೃಷ್ಟಿಸಲಾಗಿದೆ — ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸ್ವಾಗತ!'
+  },
+  hi: {
+    greeting: 'नमस्ते! मैं आपका कृषि सलाहकार हूँ। अपने खेत का विवरण बताइए।',
+    ask_location: 'कृपया अपने खेत का स्थान बताइए (गाँव/जिला)।',
+    ask_area: 'अपने खेत का आकार कितने एकड़ है?',
+    ask_crop: 'आप कौन सी फ़सल उगा रहे हैं?',
+    confirm: 'डैशबोर्ड बनाने के लिए "पुष्टि करें" दबाएँ।',
+    listen: 'सुनें',
+    next: 'आगे',
+    back: 'पीछे',
+    confirm_btn: 'पुष्टि करें',
+    creating: 'खेत बनाया जा रहा है...',
+    created: 'खेत बनाया गया — डैशबोर्ड पर आपका स्वागत है!'
+  },
+  en: {
+    greeting: 'Hello! I am your farm advisor. Let us collect your land details.',
+    ask_location: 'Please tell your farm location (village, district).',
+    ask_area: 'How many acres is your land?',
+    ask_crop: 'What crop are you currently growing?',
+    confirm: 'Tap "Confirm" to create your farm.',
+    listen: 'Listen',
+    next: 'Next',
+    back: 'Back',
+    confirm_btn: 'Confirm',
+    creating: 'Creating your farm...',
+    created: 'Farm created — welcome to the dashboard!'
+  }
+};
+
+export function t(lang: string, key: string) {
+  return (strings[lang] && strings[lang][key]) || strings['kn'][key] || key;
+>>>>>>> 5704ac7 (New Commit)
 }
 
 export default { t };
