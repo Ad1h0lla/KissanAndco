@@ -14,6 +14,8 @@ import { FarmSimulator } from './components/FarmSimulator';
 import { SocialFeed } from './components/SocialFeed';
 import VoiceButton from './components/ui/VoiceButton';
 import { t } from './i18n';
+import VoiceErrorBanner from './components/ui/VoiceErrorBanner';
+import Tutorial from './components/Tutorial';
 
 // Types
 interface FarmData {
@@ -34,6 +36,7 @@ export default function App() {
   const [calendar, setCalendar] = useState<any[]>([]);
   const [market, setMarket] = useState<any[]>([]);
   const [subsidies, setSubsidies] = useState<any[]>([]);
+  const [lang, setLang] = useState<'en'|'hi'|'kn'|'ta'>('kn');
   
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedZone, setSelectedZone] = useState<any>(null);
@@ -63,8 +66,6 @@ export default function App() {
     const onStop = () => { document.title = 'Kissan & Co'; setVoiceActive(false); };
     window.addEventListener('voice:play', onPlay as EventListener);
     window.addEventListener('voice:stop', onStop as EventListener);
-    return () => { window.removeEventListener('voice:play', onPlay as EventListener); window.removeEventListener('voice:stop', onStop as EventListener); };
-
     // Try to load farm from server, fall back to localStorage when offline
     (async () => {
       await fetchFarmData();
@@ -88,6 +89,8 @@ export default function App() {
         await fetchSoilData();
       }
     })();
+
+    return () => { window.removeEventListener('voice:play', onPlay as EventListener); window.removeEventListener('voice:stop', onStop as EventListener); };
   }, []);
 
   const fetchSoilData = async (lat?: number, lon?: number) => {
@@ -377,6 +380,7 @@ export default function App() {
   return (
     <div className="flex h-screen bg-[#F2F4F1] overflow-hidden font-sans text-gray-900 selection:bg-green-100 selection:text-green-900">
       {/* Toasts */}
+      <VoiceErrorBanner />
       {toast && (
         <div className={`fixed right-6 top-6 z-60 px-4 py-3 rounded-lg shadow-lg ${toast.type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>
           {toast.message}
@@ -491,9 +495,9 @@ export default function App() {
           <div className="space-y-1.5">
             {(isSidebarOpen || isMobileMenuOpen) && <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Business</p>}
             {[
-              { id: 'finance', icon: DollarSign, label: 'Financials' },
-              { id: 'market', icon: Store, label: 'Marketplace' },
-              { id: 'subsidies', icon: FileText, label: 'Subsidies' },
+              { id: 'finance', icon: DollarSign, label: t(lang, 'financials') },
+              { id: 'market', icon: Store, label: t(lang, 'marketplace') },
+              { id: 'subsidies', icon: FileText, label: t(lang, 'subsidies') },
             ].map((item) => (
               <button
                 key={item.id}
@@ -510,6 +514,32 @@ export default function App() {
               >
                 {activeTab === item.id && <motion.div layoutId="activeTab" className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-full" />}
                 <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} className={`min-w-[20px] transition-colors ${activeTab === item.id ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-500'}`} />
+                {(isSidebarOpen || isMobileMenuOpen) && <span>{item.label}</span>}
+              </button>
+            ))}
+          </div>
+
+          {/* Help Group */}
+          <div className="space-y-1.5">
+            {(isSidebarOpen || isMobileMenuOpen) && <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">{t(lang, 'headingsHelp')}</p>}
+            {[
+              { id: 'tutorial', icon: FileText, label: t(lang, 'tutorial') },
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden
+                  ${activeTab === item.id 
+                    ? 'bg-yellow-50 text-yellow-700 shadow-sm ring-1 ring-yellow-100' 
+                    : 'text-gray-500 hover:bg-yellow-50/50 hover:text-yellow-700'
+                  }`}
+                title={!isSidebarOpen ? item.label : ''}
+              >
+                {activeTab === item.id && <motion.div layoutId="activeTab" className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-500 rounded-r-full" />}
+                <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} className={`min-w-[20px] transition-colors ${activeTab === item.id ? 'text-yellow-600' : 'text-gray-400 group-hover:text-yellow-500'}`} />
                 {(isSidebarOpen || isMobileMenuOpen) && <span>{item.label}</span>}
               </button>
             ))}
@@ -549,11 +579,28 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-3 md:gap-8">
+            {/* Language Switcher */}
+            <div className="flex items-center gap-1 bg-white px-2 py-1 rounded-lg border border-gray-200 shadow-sm">
+              {(['en', 'hi', 'kn', 'ta'] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  className={`px-2 py-1 text-xs font-medium rounded transition ${
+                    lang === l 
+                      ? 'bg-green-100 text-green-700' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
+
             {weather?.current && (
               <div className="flex items-center gap-4 pl-6 md:border-l border-gray-200">
                 <div className="text-right hidden sm:block">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Weather</p>
-                  <p className="text-base font-bold text-gray-900">{Math.round(weather.current.temp_c)}°C, {weather.current.condition.text}</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{t(lang, 'temperature')}</p>
+                  <p className="text-base font-bold text-gray-900">{Math.round(weather.current.temp_c)}°C</p>
                 </div>
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm border border-blue-100">
                    {weather.current.condition.text.includes('Rain') ? <CloudRain size={20} className="md:w-6 md:h-6" /> : <Sun size={20} className="text-orange-500 md:w-6 md:h-6" />}
@@ -577,7 +624,7 @@ export default function App() {
                   >
                     <div className="p-5 bg-gray-50/80 backdrop-blur border-b border-gray-100 flex justify-between items-center">
                       <h4 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
-                        Notifications
+                        {t(lang, 'notifications')}
                       </h4>
                       <button onClick={() => setShowAlerts(false)}><X size={16} className="text-gray-400 hover:text-gray-600" /></button>
                     </div>
@@ -586,9 +633,9 @@ export default function App() {
                         <div className="flex gap-4">
                            <div className="mt-1 p-2 bg-blue-100 text-blue-600 rounded-xl h-fit"><CloudRain size={16} /></div>
                            <div>
-                              <p className="text-sm font-bold text-gray-900">Heavy Rain Alert</p>
-                              <p className="text-xs text-gray-500 mt-1 leading-relaxed">Expected tomorrow at 2:00 PM. We recommend pausing scheduled irrigation for Zone A.</p>
-                              <p className="text-[10px] text-gray-400 mt-2 font-medium">2 hours ago</p>
+                              <p className="text-sm font-bold text-gray-900">{t(lang, 'heavyRainAlert')}</p>
+                              <p className="text-xs text-gray-500 mt-1 leading-relaxed">{t(lang, 'expectedTomorrow')}</p>
+                              <p className="text-[10px] text-gray-400 mt-2 font-medium">2 {t(lang, 'hoursAgo')}</p>
                            </div>
                         </div>
                       </div>
@@ -596,9 +643,9 @@ export default function App() {
                         <div className="flex gap-4">
                            <div className="mt-1 p-2 bg-orange-100 text-orange-600 rounded-xl h-fit"><Activity size={16} /></div>
                            <div>
-                              <p className="text-sm font-bold text-gray-900">Pest Warning: Zone B</p>
-                              <p className="text-xs text-gray-500 mt-1 leading-relaxed">Aphid activity detected in neighboring farms (5km radius). Preventive spray recommended.</p>
-                              <p className="text-[10px] text-gray-400 mt-2 font-medium">5 hours ago</p>
+                              <p className="text-sm font-bold text-gray-900">{t(lang, 'pestWarning')}</p>
+                              <p className="text-xs text-gray-500 mt-1 leading-relaxed">{t(lang, 'aphidActivity')}</p>
+                              <p className="text-[10px] text-gray-400 mt-2 font-medium">5 {t(lang, 'hoursAgo')}</p>
                            </div>
                         </div>
                       </div>
@@ -626,26 +673,26 @@ export default function App() {
               {/* Quick Stats Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 <StatCard 
-                  label="Est. Revenue" 
+                  label={t(lang, 'estRevenue')} 
                   value={financeData?.financials?.projected_revenue ? `₹${financeData.financials.projected_revenue.min.toLocaleString()}` : '...'} 
                   icon={TrendingUp} 
                   trend="+8%" 
                   trendUp={true} 
                 />
                 <StatCard 
-                  label="Irrigation Cost" 
-                  value={financeData?.irrigation?.monthly_forecast ? `₹${financeData.irrigation.monthly_forecast.toLocaleString()}/mo` : '...'} 
+                  label={t(lang, 'irrigationCost')} 
+                  value={financeData?.irrigation?.monthly_forecast ? `₹${financeData.irrigation.monthly_forecast.toLocaleString()}${t(lang, 'perMonth')}` : '...'} 
                   icon={Droplets} 
-                  trend={financeData ? 'Projected' : ''}
+                  trend={financeData ? t(lang, 'projected') : ''}
                   trendUp={false} 
                 />
                 <StatCard 
-                  label="Soil Health" 
-                  value={soil ? soil.nitrogen : 'Analyzing...'} 
+                  label={t(lang, 'soilHealth')} 
+                  value={soil ? soil.nitrogen : t(lang, 'loading')} 
                   icon={Leaf} 
                 />
                 <StatCard 
-                  label="Active Zones" 
+                  label={t(lang, 'activeZones')} 
                   value={farm.zones.filter(z => z.status === 'Active').length} 
                   icon={Sprout} 
                 />
@@ -658,8 +705,8 @@ export default function App() {
                 <div className="xl:col-span-2 flex flex-col h-[500px] md:h-full bg-white rounded-[2rem] shadow-card border border-gray-100 p-4 md:p-8 relative overflow-hidden">
                   <div className="flex items-center justify-between mb-6 md:mb-8 z-10">
                     <div>
-                        <h2 className="text-xl md:text-2xl font-display font-bold text-gray-900">Farm Visualization</h2>
-                        <p className="text-sm md:text-base text-gray-500 mt-1">Real-time zone monitoring & irrigation status</p>
+                        <h2 className="text-xl md:text-2xl font-display font-bold text-gray-900">{t(lang, 'farmVisualization')}</h2>
+                        <p className="text-sm md:text-base text-gray-500 mt-1">{t(lang, 'realtimeMonitoring')}</p>
                     </div>
                     <div className="flex items-center gap-3 text-sm text-gray-500">
                       <span className="px-3 py-1.5 rounded-lg bg-white border border-gray-100 shadow-sm font-semibold">Visualization</span>
@@ -686,7 +733,7 @@ export default function App() {
                     <div className="relative z-10">
                         <div className="flex justify-between items-start mb-6">
                         <div>
-                            <p className="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1">Current Weather</p>
+                            <p className="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1">{t(lang, 'currentWeather')}</p>
                             <h3 className="text-5xl font-display font-bold">{weather?.current ? Math.round(weather.current.temp_c) : '--'}°</h3>
                             <p className="text-blue-50 font-medium mt-2 capitalize flex items-center gap-2">
                                 {weather?.current ? weather.current.condition.text : '--'}
@@ -699,12 +746,12 @@ export default function App() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
                                 <Wind size={20} className="mb-2 opacity-80" />
-                                <p className="text-xs text-blue-100 uppercase tracking-wider font-bold">Wind</p>
+                                <p className="text-xs text-blue-100 uppercase tracking-wider font-bold">{t(lang, 'wind')}</p>
                                 <p className="font-bold text-lg">{weather?.current ? weather.current.wind_kph : '--'} <span className="text-xs font-normal">km/h</span></p>
                             </div>
                             <div className="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/10">
                                 <Droplets size={20} className="mb-2 opacity-80" />
-                                <p className="text-xs text-blue-100 uppercase tracking-wider font-bold">Humidity</p>
+                                <p className="text-xs text-blue-100 uppercase tracking-wider font-bold">{t(lang, 'humidity')}</p>
                                 <p className="font-bold text-lg">{weather?.current ? weather.current.humidity : '--'}%</p>
                             </div>
                         </div>
@@ -716,37 +763,37 @@ export default function App() {
                     <div className="flex justify-between items-center mb-6">
                         <h3 className="font-bold text-gray-900 flex items-center gap-2 text-lg">
                             <div className="p-2 bg-green-100 text-green-600 rounded-lg"><Leaf size={20} /></div>
-                            Soil Health
+                            {t(lang, 'soilHealth')}
                         </h3>
-                        <span className="text-[10px] bg-green-50 text-green-700 px-3 py-1 rounded-full font-bold uppercase tracking-wide border border-green-100">Updated today</span>
+                        <span className="text-[10px] bg-green-50 text-green-700 px-3 py-1 rounded-full font-bold uppercase tracking-wide border border-green-100">{t(lang, 'updatedToday')}</span>
                     </div>
                     {soil ? (
                         <div className="space-y-6 flex-1">
                             <div className="flex justify-between items-center pb-4 border-b border-gray-50">
-                                <span className="text-sm text-gray-500 font-medium">pH Level</span>
-                                <span className="font-bold text-gray-900 text-lg">{soil.ph} <span className="text-xs text-gray-400 font-normal ml-1">(Neutral)</span></span>
+                                <span className="text-sm text-gray-500 font-medium">{t(lang, 'phLevel')}</span>
+                                <span className="font-bold text-gray-900 text-lg">{soil.ph} <span className="text-xs text-gray-400 font-normal ml-1">({t(lang, 'neutral')})</span></span>
                             </div>
                             <div className="flex justify-between items-center pb-4 border-b border-gray-50">
-                                <span className="text-sm text-gray-500 font-medium">Moisture</span>
+                                <span className="text-sm text-gray-500 font-medium">{t(lang, 'moisture')}</span>
                                 <span className="font-bold text-gray-900 text-lg">{soil.moisture}</span>
                             </div>
                             <div className="grid grid-cols-3 gap-3 mt-auto">
                                 <div className="bg-gray-50 rounded-xl p-3 text-center border border-gray-100">
-                                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Nitrogen</p>
+                                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">{t(lang, 'nitrogen')}</p>
                                     <p className="font-bold text-gray-900">{soil.nitrogen}</p>
                                 </div>
                                 <div className="bg-gray-50 rounded-xl p-3 text-center border border-gray-100">
-                                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Phosphorus</p>
+                                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">{t(lang, 'phosphorus')}</p>
                                     <p className="font-bold text-gray-900">{soil.phosphorus}</p>
                                 </div>
                                 <div className="bg-gray-50 rounded-xl p-3 text-center border border-gray-100">
-                                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Potassium</p>
+                                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">{t(lang, 'potassium')}</p>
                                     <p className="font-bold text-gray-900">{soil.potassium}</p>
                                 </div>
                             </div>
                         </div>
                     ) : (
-                        <div className="h-full flex items-center justify-center text-gray-400 text-sm">Loading soil data...</div>
+                        <div className="h-full flex items-center justify-center text-gray-400 text-sm">{t(lang, 'loading')}</div>
                     )}
                   </Card>
                 </div>
@@ -774,8 +821,8 @@ export default function App() {
                   <BrainCircuit size={32} strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-display font-bold text-gray-900">AI Farm Advisor</h2>
-                  <p className="text-gray-500">Interactive consultation for optimized farming.</p>
+                  <h2 className="text-2xl font-display font-bold text-gray-900">{t(lang, 'advisor')}</h2>
+                  <p className="text-gray-500">{t(lang, 'consultationDesc')}</p>
                 </div>
               </div>
 
@@ -784,16 +831,16 @@ export default function App() {
                   <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-gray-100">
                     <Sparkles size={32} className="text-purple-500" />
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-gray-900 mb-3">Start Your Farm Consultation</h3>
+                  <h3 className="text-2xl font-display font-bold text-gray-900 mb-3">{t(lang, 'startConsultation')}</h3>
                   <p className="text-gray-500 mb-8 leading-relaxed">
-                    Our AI will analyze your farm's specific conditions (Soil, Weather, Zones) and ask a few questions to tailor recommendations.
+                    {t(lang, 'consultationDesc')}
                   </p>
                   <button 
                     onClick={startAiConsultation}
                     disabled={loadingAI}
                     className="px-8 py-3 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30 active:scale-95"
                   >
-                    {loadingAI ? 'Initializing...' : 'Start Analysis'}
+                    {loadingAI ? t(lang, 'initializing') : t(lang, 'startAnalysis')}
                   </button>
                 </Card>
               )}
@@ -801,8 +848,8 @@ export default function App() {
               {aiState === 'questions' && (
                 <Card className="max-w-2xl mx-auto overflow-hidden">
                   <div className="bg-purple-50 p-6 border-b border-purple-100">
-                    <h3 className="text-lg font-bold text-purple-900">We need a few details...</h3>
-                    <p className="text-purple-700 text-sm mt-1">Help us tailor the plan to your resources.</p>
+                    <h3 className="text-lg font-bold text-purple-900">{t(lang, 'needDetails')}</h3>
+                    <p className="text-purple-700 text-sm mt-1">{t(lang, 'tailorPlan')}</p>
                   </div>
                   <div className="p-8 space-y-6">
                     {aiQuestions.map((q: any) => (
@@ -822,7 +869,7 @@ export default function App() {
                         disabled={loadingAI}
                         className="w-full py-3.5 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/20"
                         >
-                        {loadingAI ? 'Generating Plan...' : 'Get Recommendations'}
+                        {loadingAI ? t(lang, 'generatingPlan') : t(lang, 'getRecommendations')}
                         </button>
                     </div>
                   </div>
@@ -837,13 +884,13 @@ export default function App() {
                             <div className="bg-red-50 border border-red-100 rounded-2xl p-6 flex gap-4">
                                 <div className="mt-1 p-2 bg-red-100 text-red-600 rounded-lg h-fit"><LogOut size={20} className="rotate-180" /></div>
                                 <div>
-                                    <h4 className="font-bold text-red-900 text-lg">Current Analysis</h4>
+                                    <h4 className="font-bold text-red-900 text-lg">{t(lang, 'currentAnalysis')}</h4>
                                     <p className="text-red-800 mt-2 leading-relaxed">{aiCritique}</p>
                                 </div>
                             </div>
                         )}
 
-                        <h3 className="font-display font-bold text-xl text-gray-900 mt-8">Recommended Strategy</h3>
+                        <h3 className="font-display font-bold text-xl text-gray-900 mt-8">{t(lang, 'recommendedStrategy')}</h3>
                         <div className="space-y-4">
                             {aiSuggestions.map((suggestion, i) => (
                                 <Card key={i} className="group hover:border-purple-200 transition-all duration-300">
@@ -891,7 +938,7 @@ export default function App() {
                     {/* Right Column: Map Visualization */}
                     <div className="space-y-6">
                         <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm h-[400px] flex flex-col">
-                            <h4 className="font-bold text-gray-900 mb-4">Proposed Layout</h4>
+                            <h4 className="font-bold text-gray-900 mb-4">{t(lang, 'proposedLayout')}</h4>
                             <div className="flex-1 relative rounded-2xl overflow-hidden border border-gray-100">
                                 <FarmMap 
                                     zones={farm.zones} 
@@ -907,7 +954,7 @@ export default function App() {
                             onClick={() => setAiState('initial')}
                             className="w-full py-4 border border-gray-200 text-gray-600 font-medium rounded-xl hover:bg-gray-50 transition-colors"
                         >
-                            Start New Consultation
+                            {t(lang, 'startNewConsultation')}
                         </button>
                     </div>
                 </div>
@@ -1057,6 +1104,8 @@ export default function App() {
                     ))}
                 </div>
             </div>
+          ) : activeTab === 'tutorial' ? (
+            <Tutorial lang={lang} />
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-gray-400">
               <Store size={48} className="mb-4 opacity-20" />

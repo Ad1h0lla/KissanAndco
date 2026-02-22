@@ -1,0 +1,587 @@
+const translations: Record<string, Record<string, string>> = {
+  en: {
+    // Header & Navigation
+    greeting: 'Hello',
+    listen: 'Listen',
+    location: 'Location',
+    size: 'Land size',
+    create: 'Create',
+    language: 'Language',
+    logout: 'Logout',
+    settings: 'Settings',
+    
+    // Sidebar
+    overview: 'Overview',
+    calendar: 'Calendar',
+    community: 'Community',
+    advisor: 'AI Advisor',
+    simulator: 'Simulator',
+    financials: 'Financials',
+    marketplace: 'Marketplace',
+    subsidies: 'Subsidies',
+    tutorial: 'Tutorial',
+    
+    // Overview Tab
+    farmName: 'Farm Name',
+    farmLocation: 'Location',
+    landArea: 'Land Area',
+    irrigationType: 'Irrigation Type',
+    currentCrop: 'Current Crop',
+    
+    // Weather Panel
+    temperature: 'Temperature',
+    humidity: 'Humidity',
+    windSpeed: 'Wind Speed',
+    rainfall: 'Rainfall',
+    weatherUnavailable: 'Weather data unavailable',
+    
+    // Soil Panel
+    soilMoisture: 'Soil Moisture',
+    soilType: 'Soil Type',
+    nitrogen: 'Nitrogen',
+    phosphorus: 'Phosphorus',
+    potassium: 'Potassium',
+    soilUnavailable: 'Soil data unavailable',
+    
+    // Farm Map / Zones
+    zones: 'Zones',
+    crop: 'Crop',
+    irrigation: 'Irrigation',
+    status: 'Status',
+    healthy: 'Healthy',
+    needsWater: 'Needs Water',
+    fallow: 'Fallow',
+    scheduleIrrigation: 'Schedule Irrigation',
+    logHarvest: 'Log Harvest',
+    
+    // AI Advisor
+    askAdvisor: 'Ask AI Advisor',
+    getCropSuggestions: 'Get Crop Suggestions',
+    cropSuggestions: 'Crop Suggestions',
+    irrigationLayout: 'Irrigation Layout',
+    expectedYield: 'Expected Yield',
+    
+    // Simulator
+    simulateProfit: 'Simulate Profit',
+    yieldEstimate: 'Yield Estimate',
+    profitEstimate: 'Profit Estimate',
+    
+    // Marketplace
+    sellProduce: 'Sell Produce',
+    cropName: 'Crop Name',
+    quantity: 'Quantity',
+    price: 'Price',
+    contact: 'Contact',
+    postListing: 'Post Listing',
+    
+    // Subsidies
+    eligibleSchemes: 'Eligible Schemes',
+    schemeName: 'Scheme Name',
+    eligibility: 'Eligibility',
+    benefits: 'Benefits',
+    
+    // Tutorial Cards
+    tutorialTitle: 'Farm Guide',
+    farmOverview: 'Farm Overview',
+    farmOverviewDesc: 'See your land layout with zones for different crops',
+    weatherSoil: 'Weather & Soil',
+    weatherSoilDesc: 'Check weather forecast and soil health data',
+    aiAdviceDesc: 'Get personalized crop and irrigation suggestions',
+    simulatorDesc: 'Estimate your profit and yield',
+    marketplaceDesc: 'Buy and sell farm produce directly',
+    subsidiesDesc: 'Find government schemes you qualify for',
+    
+    // Additional UI Strings
+    farmVisualization: 'Farm Visualization',
+    realtimeMonitoring: 'Real-time zone monitoring & irrigation status',
+    currentWeather: 'Current Weather',
+    wind: 'Wind',
+    soilHealth: 'Soil Health',
+    phLevel: 'pH Level',
+    neutral: 'Neutral',
+    moisture: 'Moisture',
+    updatedToday: 'Updated today',
+    notifications: 'Notifications',
+    heavyRainAlert: 'Heavy Rain Alert',
+    expectedTomorrow: 'Expected tomorrow at 2:00 PM. We recommend pausing scheduled irrigation for Zone A.',
+    pestWarning: 'Pest Warning: Zone B',
+    aphidActivity: 'Aphid activity detected in neighboring farms (5km radius). Preventive spray recommended.',
+    riskAwareFarmStrategy: 'Risk-Aware Farm Strategy',
+    simulateUncertainty: 'Simulate uncertainty before sowing and compare survival outcomes.',
+    startConsultation: 'Start Your Farm Consultation',
+    consultationDesc: 'Our AI will analyze your farm\'s specific conditions (Soil, Weather, Zones) and ask a few details to tailor recommendations.',
+    startAnalysis: 'Start Analysis',
+    needDetails: 'We need a few details...',
+    tailorPlan: 'Help us tailor the plan to your resources.',
+    getRecommendations: 'Get Recommendations',
+    generatingPlan: 'Generating Plan...',
+    initializing: 'Initializing...',
+    recommendedStrategy: 'Recommended Strategy',
+    currentAnalysis: 'Current Analysis',
+    proposedLayout: 'Proposed Layout',
+    startNewConsultation: 'Start New Consultation',
+    financialProjections: 'Financial Projections',
+    projectedProfit: 'Projected Profit',
+    costConfidence: 'Confidence Score',
+    detailedCost: 'Detailed Cost Invoice',
+    totalCost: 'Total Est. Cost',
+    loadingFinancial: 'Loading Financial Data...',
+    farmMarketplace: 'Farm-to-Table Marketplace',
+    governmentSubsidies: 'Government Subsidies',
+    availableSchemes: 'Available schemes for your farm profile.',
+    farmingCalendar: 'Farming Calendar',
+    upcomingTasks: 'Upcoming tasks and harvest windows.',
+    comingSoon: 'Coming Soon',
+    
+    // Common
+    loading: 'Loading...',
+    irrigationCost: 'Irrigation Cost',
+    activeZones: 'Active Zones',
+    projected: 'Projected',
+    perMonth: '/mo',
+    hoursAgo: 'hours ago',
+    headingsHelp: 'Help',
+    
+    // Common
+    loading: 'Loading...',
+    save: 'Save',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    edit: 'Edit',
+    add: 'Add',
+    submit: 'Submit',
+    retry: 'Retry',
+    error: 'Error',
+    success: 'Success'
+  },
+  hi: {
+    // Header & Navigation
+    greeting: 'नमस्ते',
+    listen: 'सुनें',
+    location: 'स्थान',
+    size: 'भूमि आकार',
+    create: 'बनाएँ',
+    language: 'भाषा',
+    logout: 'लॉगआउट',
+    settings: 'सेटिंग्स',
+    
+    // Sidebar
+    overview: 'अवलोकन',
+    calendar: 'कैलेंडर',
+    community: 'समुदाय',
+    advisor: 'AI सलाहकार',
+    simulator: 'सिम्युलेटर',
+    financials: 'वित्त',
+    marketplace: 'बाजार',
+    subsidies: 'सब्सिडी',
+    tutorial: 'ट्यूटोरियल',
+    
+    // Overview Tab
+    farmName: 'खेत का नाम',
+    farmLocation: 'स्थान',
+    landArea: 'भूमि क्षेत्र',
+    irrigationType: 'सिंचाई प्रकार',
+    currentCrop: 'वर्तमान फसल',
+    
+    // Weather Panel
+    temperature: 'तापमान',
+    humidity: 'नमी',
+    windSpeed: 'हवा की गति',
+    rainfall: 'वर्षा',
+    weatherUnavailable: 'मौसम डेटा उपलब्ध नहीं',
+    
+    // Soil Panel
+    soilMoisture: 'मिट्टी की नमी',
+    soilType: 'मिट्टी का प्रकार',
+    nitrogen: 'नाइट्रोजन',
+    phosphorus: 'फॉस्फोरस',
+    potassium: 'पोटेशियम',
+    soilUnavailable: 'मिट्टी डेटा उपलब्ध नहीं',
+    
+    // Farm Map / Zones
+    zones: 'क्षेत्र',
+    crop: 'फसल',
+    irrigation: 'सिंचाई',
+    status: 'स्थिति',
+    healthy: 'स्वस्थ',
+    needsWater: 'पानी की जरूरत',
+    fallow: 'परती',
+    scheduleIrrigation: 'सिंचाई शेड्यूल करें',
+    logHarvest: 'कटाई लॉग करें',
+    
+    // AI Advisor
+    askAdvisor: 'AI सलाहकार से पूछें',
+    getCropSuggestions: 'फसल सुझाव प्राप्त करें',
+    cropSuggestions: 'फसल सुझाव',
+    irrigationLayout: 'सिंचाई लेआउट',
+    expectedYield: 'अपेक्षित उपज',
+    
+    // Simulator
+    simulateProfit: 'लाभ का अनुमान लगाएँ',
+    yieldEstimate: 'उपज अनुमान',
+    profitEstimate: 'लाभ अनुमान',
+    
+    // Marketplace
+    sellProduce: 'उपज बेचें',
+    cropName: 'फसल का नाम',
+    quantity: 'मात्रा',
+    price: 'कीमत',
+    contact: 'संपर्क',
+    postListing: 'सूची पोस्ट करें',
+    
+    // Subsidies
+    eligibleSchemes: 'योग्य योजनाएँ',
+    schemeName: 'योजना का नाम',
+    eligibility: 'पात्रता',
+    benefits: 'लाभ',
+    
+    // Tutorial Cards
+    tutorialTitle: 'खेत गाइड',
+    farmOverview: 'खेत अवलोकन',
+    farmOverviewDesc: 'विभिन्न फसलों के क्षेत्रों के साथ अपनी भूमि लेआउट देखें',
+    weatherSoil: 'मौसम और मिट्टी',
+    weatherSoilDesc: 'मौसम पूर्वानुमान और मिट्टी स्वास्थ्य डेटा जांचें',
+    aiAdviceDesc: 'व्यक्तिगत फसल और सिंचाई सुझाव प्राप्त करें',
+    simulatorDesc: 'अपने लाभ और उपज का अनुमान लगाएँ',
+    marketplaceDesc: 'सीधे खेत की उपज खरीदें और बेचें',
+    subsidiesDesc: 'सरकारी योजनाएँ खोजें जिनके लिए आप योग्य हैं',
+    
+    // Additional UI Strings
+    farmVisualization: 'खेत की कल्पना करें',
+    realtimeMonitoring: 'वास्तविक समय क्षेत्र निगरानी और सिंचाई स्थिति',
+    currentWeather: 'वर्तमान मौसम',
+    wind: 'हवा',
+    soilHealth: 'मिट्टी स्वास्थ्य',
+    phLevel: 'pH स्तर',
+    neutral: 'तटस्थ',
+    moisture: 'नमी',
+    updatedToday: 'आज अपडेट किया गया',
+    notifications: 'सूचनाएँ',
+    heavyRainAlert: 'भारी बारिश का अलर्ट',
+    expectedTomorrow: 'कल 2:00 बजे प्रत्याशित। हम क्षेत्र A के लिए निर्धारित सिंचाई को रोकने की सुझाव देते हैं।',
+    pestWarning: 'कीट चेतावनी: क्षेत्र B',
+    aphidActivity: 'आस-पास के खेतों में (5 किमी त्रिज्या) एफिड गतिविधि का पता चला। निवारक स्प्रे की सिफारिश की जाती है।',
+    riskAwareFarmStrategy: 'जोखिम-सचेत खेत रणनीति',
+    simulateUncertainty: 'बोने से पहले अनिश्चितता का अनुकरण करें और अस्तित्व परिणामों की तुलना करें।',
+    startConsultation: 'अपना खेत परामर्श शुरू करें',
+    consultationDesc: 'हमारा AI आपके खेत की विशिष्ट स्थितियों (मिट्टी, मौसम, क्षेत्र) का विश्लेषण करेगा और सिफारिशों को अनुकूलित करने के लिए कुछ विवरण पूछेगा।',
+    startAnalysis: 'विश्लेषण शुरू करें',
+    needDetails: 'हमें कुछ विवरण चाहिए...',
+    tailorPlan: 'हमें आपके संसाधनों के अनुसार योजना तैयार करने में मदद करें।',
+    getRecommendations: 'सिफारिशें प्राप्त करें',
+    generatingPlan: 'योजना तैयार कर रहे हैं...',
+    initializing: 'शुरू हो रहा है...',
+    recommendedStrategy: 'अनुशंसित रणनीति',
+    currentAnalysis: 'वर्तमान विश्लेषण',
+    proposedLayout: 'प्रस्तावित लेआउट',
+    startNewConsultation: 'नया परामर्श शुरू करें',
+    estRevenue: 'अनुमानित राजस्व',
+    irrigationCost: 'सिंचाई लागत',
+    activeZones: 'सक्रिय क्षेत्र',
+    projected: 'अनुमानित',
+    perMonth: '/माह',
+    hoursAgo: 'घंटे पहले',
+    headingsHelp: 'मदद',
+    
+    // Common
+    loading: 'लोड हो रहा है...',
+    save: 'सहेजें',
+    cancel: 'रद्द करें',
+    delete: 'हटाएँ',
+    edit: 'संपादित करें',
+    add: 'जोड़ें',
+    submit: 'सबमिट करें',
+    retry: 'दोबारा कोशिश करें',
+    error: 'त्रुटि',
+    success: 'सफलता'
+  },
+  kn: {
+    // Header & Navigation
+    greeting: 'ನಮಸ್ಕಾರ',
+    listen: 'ಕೇಳು',
+    location: 'ಸ್ಥಳ',
+    size: 'ಭೂಮಿ ಪ್ರಮಾಣ',
+    create: 'ರಚಿಸಿ',
+    language: 'ಭಾಷೆ',
+    logout: 'ಲಾಗ್‌ ಔಟ್',
+    settings: 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+    
+    // Sidebar
+    overview: 'ಅವಲೋಕನ',
+    calendar: 'ಕ್ಯಾಲೆಂಡರ್',
+    community: 'ಸಮುದಾಯ',
+    advisor: 'AI ಪರಾಮರ್ಶದಾತ',
+    simulator: 'ಸಿಮುಲೇಟರ್',
+    financials: 'ಆರ್ಥಿಕ',
+    marketplace: 'ಮಾರುಕಟ್ಟೆ',
+    subsidies: 'ಸಹಾಯಕ',
+    tutorial: 'ಪರಿಚಯ',
+    
+    // Overview Tab
+    farmName: 'ಹೊಲದ ಹೆಸರು',
+    farmLocation: 'ಸ್ಥಳ',
+    landArea: 'ಭೂಮಿ ಪ್ರದೇಶ',
+    irrigationType: 'ನೀರಾವರಣ ಪ್ರಕಾರ',
+    currentCrop: 'ಪ್ರಸ್ತುತ ಬೆಳೆ',
+    
+    // Weather Panel
+    temperature: 'ಉಷ್ಣತೆ',
+    humidity: 'ಆರ್ದ್ರತೆ',
+    windSpeed: 'ಗಾಳಿಯ ವೇಗ',
+    rainfall: 'ಮಳೆ',
+    weatherUnavailable: 'ಹವಾಮಾನ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ',
+    
+    // Soil Panel
+    soilMoisture: 'ಮಣ್ಣಿನ ತೇವಾಂಶ',
+    soilType: 'ಮಣ್ಣಿನ ಪ್ರಕಾರ',
+    nitrogen: 'ನೈಟ್ರೋಜನ್',
+    phosphorus: 'ಫಾಸ್ಫರಸ್',
+    potassium: 'ಪೋಟಾಶಿಯಮ್',
+    soilUnavailable: 'ಮಣ್ಣಿನ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ',
+    
+    // Farm Map / Zones
+    zones: 'ವಲಯಗಳು',
+    crop: 'ಬೆಳೆ',
+    irrigation: 'ನೀರಾವರಣ',
+    status: 'ಸ್ಥಿತಿ',
+    healthy: 'ಆರೋಗ್ಯಕರ',
+    needsWater: 'ನೀರಿನ ಅಗತ್ಯ',
+    fallow: 'ಕೆಳ ಭೂಮಿ',
+    scheduleIrrigation: 'ನೀರಾವರಣ ಅವಧಿ ನಿರ್ಧರಿಸಿ',
+    logHarvest: 'ಸುಗ್ಗಿ ಲಾಗ್ ಮಾಡಿ',
+    
+    // AI Advisor
+    askAdvisor: 'AI ಪರಾಮರ್ಶದಾತರನ್ನು ಕೇಳಿ',
+    getCropSuggestions: 'ಬೆಳೆ ಸಲಹೆ ಪಡೆಯಿರಿ',
+    cropSuggestions: 'ಬೆಳೆ ಸಲಹೆ',
+    irrigationLayout: 'ನೀರಾವರಣ ಲೇಔಟ್',
+    expectedYield: 'ನಿರೀಕ್ಷಿತ ಫಲ',
+    
+    // Simulator
+    simulateProfit: 'ಲಾಭ ಅನುಕರಣೆ',
+    yieldEstimate: 'ಫಲ ಅಂದಾಜು',
+    profitEstimate: 'ಲಾಭ ಅಂದಾಜು',
+    
+    // Marketplace
+    sellProduce: 'ಹಸಿರು ಮಾರಿ',
+    cropName: 'ಬೆಳೆಯ ಹೆಸರು',
+    quantity: 'ಪ್ರಮಾಣ',
+    price: 'ಬೆಲೆ',
+    contact: 'ಸಂಪರ್ಕ',
+    postListing: 'ಪಟ್ಟಿ ಪೋಸ್ಟ್ ಮಾಡಿ',
+    
+    // Subsidies
+    eligibleSchemes: 'ಯೋಗ್ಯ ಯೋಜನೆಗಳು',
+    schemeName: 'ಯೋಜನೆಯ ಹೆಸರು',
+    eligibility: 'ಯೋಗ್ಯತೆ',
+    benefits: 'ಪ್ರಯೋಜನಗಳು',
+    
+    // Tutorial Cards
+    tutorialTitle: 'ಹೊಲ ಮಾರ್ಗದರ್ಶನ',
+    farmOverview: 'ಹೊಲದ ಅವಲೋಕನ',
+    farmOverviewDesc: 'ವಿವಿಧ ಬೆಳೆಗಳಿಗೆ ವಲಯಗಳೊಂದಿಗೆ ನಿಮ್ಮ ಭೂಮಿ ಲೇಔಟ್ ನೋಡಿ',
+    weatherSoil: 'ಹವಾಮಾನ ಮತ್ತು ಮಣ್ಣು',
+    weatherSoilDesc: 'ಹವಾಮಾನ ಮುನ್ನೋಟ ಮತ್ತು ಮಣ್ಣಿನ ಆರೋಗ್ಯ ಡೇಟಾ ಪರಿಶೀಲಿಸಿ',
+    aiAdviceDesc: 'ವ್ಯಕ್ತಿಗತ ಬೆಳೆ ಮತ್ತು ನೀರಾವರಣ ಸಲಹೆ ಪಡೆಯಿರಿ',
+    simulatorDesc: 'ನಿಮ್ಮ ಲಾಭ ಮತ್ತು ಫಲ ಅಂದಾಜು ಮಾಡಿ',
+    marketplaceDesc: 'ನೇರವಾಗಿ ಹೊಲದ ಮೈಲಾಶ್ರಯ ಖರೀದಿ ಮಾಡಿ ಮತ್ತು ಮಾರಿ',
+    subsidiesDesc: 'ನೀವು ಅರ್ಹತೆ ಹೊಂದಿರುವ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಿ',
+    
+    // Additional UI Strings
+    farmVisualization: 'ಹೊಲದ ದೃಶ್ಯೀಕರಣ',
+    realtimeMonitoring: 'ಮುಕ್ತ ವಲಯ ಮೇಲ್ವಿಚಾರಣೆ ಮತ್ತು ನೀರಾವರಣ ಸ್ಥಿತಿ',
+    currentWeather: 'ಪ್ರಸ್ತುತ ಹವಾಮಾನ',
+    wind: 'ಗಾಳಿ',
+    soilHealth: 'ಮಣ್ಣಿನ ಆರೋಗ್ಯ',
+    phLevel: 'pH ಮಟ್ಟ',
+    neutral: 'ತಟಸ್ಥ',
+    moisture: 'ತೇವಾಂಶ',
+    updatedToday: 'ಇಂದು ನವೀಕರಿಸಲಾಗಿದೆ',
+    notifications: 'ಸೂಚನೆಗಳು',
+    heavyRainAlert: 'ಭಾರೀ ಮಳೆಯ ಎಚ್ಚರಿಕೆ',
+    expectedTomorrow: 'ನಾಳೆ ಸಂಜೆ 2:00 ಕ್ಕೆ ನಿರೀಕ್ಷಿತ। ವಲಯ A ಗಾಗಿ ನಿರ್ಧಾರಿತ ನೀರಾವರಣ ವಿರಾಮಗೊಳಿಸುವಿಕೆಯನ್ನು ನಾವು ಶಿಫಾರಸು ಮಾಡುತ್ತೇವೆ.',
+    pestWarning: 'ಕೀಟ ಎಚ್ಚರಿಕೆ: ವಲಯ B',
+    aphidActivity: 'ಅಕ್ರಮೇಯ ಹೊಸ್ನ (5 ಕಿ.ಮೀ ತ್ರಿಜ್ಯ) ಪ್ರತಿಫಲ ಶಿಫಾರಸು ಕೀಟಗಳ ಚಟುವಟಿಕೆಯನ್ನು ಸನಿಹದಲ್ಲಿ ಹೋಳೆಯಲಾಗಿದೆ.',
+    riskAwareFarmStrategy: 'ಝೌಕಿನ-ಸಚೇತ ಹೊಲದ ತಂತ್ರ',
+    simulateUncertainty: 'ಬಿತ್ತುವ ಮೊದಲು ಅನಿಶ್ಚಿತತೆಯನ್ನು ಅನುಕರಣೆ ಮಾಡಿ ಮತ್ತು ಎಂದಿಗೂ ಪರಿಣಾಮಗಳನ್ನು ಹೋಲಿಸಿ.',
+    startConsultation: 'ನಿಮ್ಮ ಹೊಲದ ಸಲಹೆ ಮಾತೃತ್ವವನ್ನು ಶುರುಗೆ ಮಾಡಿ',
+    consultationDesc: 'ನಮ್ಮ AI ನಿಮ್ಮ ಹೊಲದ ನಿರ್ದಿಷ್ಟ ಪರಿಸ್ಥಿತಿಗಳನ್ನು (ಮಣ್ಣು, ಹವಾಮಾನ, ವಲಯಗಳು) ವಿಶ್ಲೇಷಿಸುತ್ತದೆ ಮತ್ತು ಸುಪಾರಿಶುಗಳನ್ನು ಕಾಸ್ಟಮೈಜ್ ಮಾಡಲು ಕೆಲವು ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳುತ್ತದೆ.',
+    startAnalysis: 'ವಿಶ್ಲೇಷಣ ಆರಂಭ ಮಾಡಿ',
+    needDetails: 'ನಮಗೆ ಕೆಲವು ವಿವರಗಳು ಬೇಕಾಗುತ್ತವೆ...',
+    tailorPlan: 'ನಿಮ್ಮ ಸಂಪನ್ನಗಳಿಗೆ ಯೋಜನೆಯನ್ನು ರೂಪಿಸಲು ನಮಗೆ ಸಹಾಯ ಮಾಡಿ.',
+    getRecommendations: 'ಸುಪಾರಿಶುಗಳನ್ನು ಪಡೆಯಿರಿ',
+    generatingPlan: 'ಯೋಜನೆಯನ್ನು ರಚಿಸುತ್ತಿದೆ...',
+    initializing: 'ಆರಂಭಿಸಿದೆ...',
+    recommendedStrategy: 'ಶಿಫಾರಸು ಮಾಡಿದ ತಂತ್ರ',
+    currentAnalysis: 'ಪ್ರಸ್ತುತ ವಿಶ್ಲೇಷಣೆ',
+    proposedLayout: 'ಪ್ರಸ್ತಾವಿತ ವಿನ್ಯಾಸ',
+    startNewConsultation: 'ಹೊಸ ಸಲಹೆ ಮಾತೃತ್ವವನ್ನು ಶುರುಗೆ ಮಾಡಿ',
+    estRevenue: 'ಅನುಮತಿ ರಾಜಸ್ವ',
+    irrigationCost: 'ನೀರಾವರಣ ವೆಚ್ಚ',
+    activeZones: 'ಸಕ್ರಿಯ ವಲಯಗಳು',
+    projected: 'ಪ್ರಕ್ಷೇಪಿತ',
+    perMonth: '/ತಿಂಗಳು',
+    hoursAgo: 'ಗಂಟೆಗಳ ಹಿಂದೆ',
+    headingsHelp: 'ಸಹಾಯ',
+    
+    // Common
+    loading: 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+    save: 'ಉಳಿಸಿ',
+    cancel: 'ರದ್ದು ಮಾಡಿ',
+    delete: 'ಅಳಿಸು',
+    edit: 'ಸಂಪಾದಿಸು',
+    add: 'ಸೇರಿಸು',
+    submit: 'ಸಲ್ಲಿಸು',
+    retry: 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ',
+    error: 'ಪ್ರಮಾದ',
+    success: 'ಯಶಸ್ಸು'
+  },
+  ta: {
+    // Header & Navigation
+    greeting: 'வணக்கம்',
+    listen: 'கேள்',
+    location: 'இடம்',
+    size: 'நிலப்பரப்பு',
+    create: 'உருவாக்கு',
+    language: 'மொழி',
+    logout: 'வெளியேறு',
+    settings: 'அமைப்புகள்',
+    
+    // Sidebar
+    overview: 'கண்ணோட்டம்',
+    calendar: 'நாட்காட்டி',
+    community: 'சமூகம்',
+    advisor: 'AI ஆலோசகர்',
+    simulator: 'உருவகிப்பவர்',
+    financials: 'நிதி',
+    marketplace: 'சந்தை',
+    subsidies: 'மானியம்',
+    tutorial: 'பயிற்சி',
+    
+    // Overview Tab
+    farmName: 'பண்ணையின் பெயர்',
+    farmLocation: 'இடம்',
+    landArea: 'நிலப் பரப்பளவு',
+    irrigationType: 'பாசன வகை',
+    currentCrop: 'தற்போதைய பயிர்',
+    
+    // Weather Panel
+    temperature: 'வெப்பநிலை',
+    humidity: 'ஈரப்பதம்',
+    windSpeed: 'காற்றின் வேகம்',
+    rainfall: 'மழைப்பொழிவு',
+    weatherUnavailable: 'காலநிலை தரவு கிடைக்கவில்லை',
+    
+    // Soil Panel
+    soilMoisture: 'மண் ஈரப்பதம்',
+    soilType: 'மண் வகை',
+    nitrogen: 'நைட்ரஜன்',
+    phosphorus: 'பாஸ்பரஸ்',
+    potassium: 'பொட்டாசியம்',
+    soilUnavailable: 'மண் தரவு கிடைக்கவில்லை',
+    
+    // Farm Map / Zones
+    zones: 'மண்டலங்கள்',
+    crop: 'பயிர்',
+    irrigation: 'பாசனம்',
+    status: 'நிலை',
+    healthy: 'ஆரோக்கியமான',
+    needsWater: 'நீர் தேவை',
+    fallow: 'வரா処்க்க',
+    scheduleIrrigation: 'பாசன அட்டவணை',
+    logHarvest: 'அறுவடை பதிவு',
+    
+    // AI Advisor
+    askAdvisor: 'AI ஆலோசகரிடம் கேளுங்கள்',
+    getCropSuggestions: 'பயிர் பரிந்துரைகளைப் பெறவும்',
+    cropSuggestions: 'பயிர் பரிந்துரைகள்',
+    irrigationLayout: 'பாசன இடமைப்பு',
+    expectedYield: 'எதிர்பார்க்கப்பட்ட விளைச்சல்',
+    
+    // Simulator
+    simulateProfit: 'இலாபம் சிமுலேஷன்',
+    yieldEstimate: 'விளைச்சல் மதிப்பீடு',
+    profitEstimate: 'இலாப மதிப்பீடு',
+    
+    // Marketplace
+    sellProduce: 'விளைபொருளை விற்க',
+    cropName: 'பயிரின் பெயர்',
+    quantity: 'அளவு',
+    price: 'விலை',
+    contact: 'தொடர்பு',
+    postListing: 'பட்டியலை இடவும்',
+    
+    // Subsidies
+    eligibleSchemes: 'தகுந்த திட்டங்கள்',
+    schemeName: 'திட்டத்தின் பெயர்',
+    eligibility: 'தகுதி',
+    benefits: 'நன்மைகள்',
+    
+    // Tutorial Cards
+    tutorialTitle: 'பண்ணை வழிகாட்டி',
+    farmOverview: 'பண்ணையின் கண்ணோட்டம்',
+    farmOverviewDesc: 'வெவ்வேறு பயிர்களுக்கான மண்டலங்களுடன் உங்கள் நிலப் பரிமாணம் பார்க்கவும்',
+    weatherSoil: 'காலநிலை மற்றும் மண்',
+    weatherSoilDesc: 'வானிலை முன்னறிவிப்பு மற்றும் மண் ஆரோக்கியத் தரவைச் சரிபார்க்கவும்',
+    aiAdviceDesc: 'ব்যক்তিगত பயிர் மற்றும் பாசன পরிந்துரைகளைப் பெறவும்',
+    simulatorDesc: 'உங்கள் இலாபம் மற்றும் விளைச்சல் மதிப்பீடு செய்யவும்',
+    marketplaceDesc: 'நேரடியாக பண்ணை விளைபொருளை வாங்க மற்றும் விற்க',
+    subsidiesDesc: 'நீங்கள் தகுந்த அரசு திட்டங்களைக் கண்டறியவும்',
+    
+    // Additional UI Strings
+    farmVisualization: 'பண்ணை காட்சிப்படுத்தல்',
+    realtimeMonitoring: 'நிரந்தர மண்டল கண்காணிப்பு மற்றும் பாசன நிலை',
+    currentWeather: 'தற்போதைய காலநிலை',
+    wind: 'காற்று',
+    soilHealth: 'மண் ஆரோக்கியம்',
+    phLevel: 'pH நிலை',
+    neutral: 'நடுநிலை',
+    moisture: 'ஈரப்பதம்',
+    updatedToday: 'இன்று புதுப்பிக்கப்பட்டது',
+    notifications: 'அறிவிப்புகள்',
+    heavyRainAlert: 'பெரும் மழை விழிப்பு',
+    expectedTomorrow: 'நாளை மதிய 2:00 மணிக்கு எதிர்பார்க்கப்படுகிறது. மண்டலம் A க்கு திட்டமிடப்பட்ட பாசனத்தை நிறுத்த வேண்டும் என்று நாங்கள் பரிந்துரைக்கிறோம்.',
+    pestWarning: 'கீடு எச்சரிக்கை: மண்டலம் B',
+    aphidActivity: 'அருகிலுள்ள பண்ணைகளில் (5 கிமீ ஆரம்) பசுமல் செயல்பாடு கண்டறியப்பட்டது. தடுப்பு தெளிப்பு பரிந்துரைக்கப்படுகிறது.',
+    riskAwareFarmStrategy: 'ஆபத்து-விழிப்பு பண்ணை கூட்டக் கொள்கை',
+    simulateUncertainty: 'விதைப்பதற்கு முன் நிশ்சயமின்மையை உருவகமாக்கி, உயிர்வாழ்வு முடிவுகளை ஒப்பிடவும்.',
+    startConsultation: 'உங்கள் பண்ணை ஆலோசனை தொடங்கவும்',
+    consultationDesc: 'எங்கள் AI உங்கள் பண்ணையின் குறிப்பிட்ட நிலைமைகளை (மண், காலநிலை, மண்டலங்கள்) பகுப்பாய்வு செய்து, பரிந்துரைகளை தனிப்பயனாக்க சில கேள்விகளைக் கேட்கும்.',
+    startAnalysis: 'பகுப்பாய்வு தொடங்கவும்',
+    needDetails: 'நமக்கு சில விவரங்கள் தேவைப்படுகின்றன...',
+    tailorPlan: 'உங்கள் வளங்களுக்கு ஏற்ப திட்டத்தை வடிவமைக்க உதவவும்.',
+    getRecommendations: 'பரிந்துரைகளைப் பெறவும்',
+    generatingPlan: 'திட்டத்தை உருவாக்கிக் கொண்டிருக்கிறது...',
+    initializing: 'துவங்கிக் கொண்டிருக்கிறது...',
+    recommendedStrategy: 'பரிந்துரைக்கப்பட்ட நீதி',
+    currentAnalysis: 'தற்போதைய பகுப்பாய்வு',
+    proposedLayout: 'முன்மொழிந்த அமைப்பு',
+    startNewConsultation: 'புதிய ஆலோசனை தொடங்கவும்',
+    estRevenue: 'மதிப்பீட்டு வருவாய்',
+    irrigationCost: 'பாசன செலவு',
+    activeZones: 'செயல்படும் மண்டலங்கள்',
+    projected: 'ப்ரொஜெக்ட் செய்யப்பட்ட',
+    perMonth: '/மாத',
+    hoursAgo: 'மணிநேரம் முன்',
+    headingsHelp: 'உதவி',
+    
+    // Common
+    loading: 'ஏற்றுகிறது...',
+    save: 'சேமிக்கவும்',
+    cancel: 'ரத்து செய்',
+    delete: 'அழிக்கவும்',
+    edit: 'திருத்து',
+    add: 'சேர்க்கவும்',
+    submit: 'சமர்ப்பிக்கவும்',
+    retry: 'மீண்டும் முயற்சி செய்யவும்',
+    error: 'பிழை',
+    success: 'வெற்றி'
+  }
+};
+
+export function t(lang: string | undefined, key: string) {
+  const l = (lang || 'kn').split('-')[0];
+  return (translations[l] && translations[l][key]) || translations['en'][key] || key;
+}
+
+export default { t };

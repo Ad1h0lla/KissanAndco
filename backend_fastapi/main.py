@@ -30,9 +30,10 @@ def get_db():
     return conn
 
 def init_db():
-    conn = get_db()
-    cur = conn.cursor()
-    cur.executescript(r"""
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.executescript(r"""
     CREATE TABLE IF NOT EXISTS farm (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
@@ -64,10 +65,17 @@ def init_db():
       FOREIGN KEY(zoneId) REFERENCES zones(id)
     );
     """)
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
+        print("[DB] Database initialized successfully")
+    except Exception as e:
+        print(f"[DB] Error during init: {e}")
+        raise
 
-init_db()
+# Initialize DB on startup
+@app.on_event("startup")
+async def startup_event():
+    init_db()
 
 # Models
 class VoiceRequest(BaseModel):
@@ -250,7 +258,7 @@ async def voice(req: VoiceRequest):
         raise HTTPException(status_code=502, detail=str(e))
 
 
-# Lightweight run when using `python -m backend_fastapi.main`
+# Lightweight run when using `python main.py` or `uvicorn main:app`
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run('backend_fastapi.main:app', host='0.0.0.0', port=3000, reload=True)
+    uvicorn.run(app, host='127.0.0.1', port=3000, reload=False)
