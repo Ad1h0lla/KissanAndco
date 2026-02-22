@@ -1,4 +1,7 @@
 import express from "express";
+// Load environment variables from a local .env file when present.
+// This ensures GEMINI_API_KEY or API_KEY are populated in development.
+import 'dotenv/config';
 import { createServer as createViteServer } from "vite";
 import Database from "better-sqlite3";
 import path from "path";
@@ -43,6 +46,15 @@ db.exec(`
     waterAccess INTEGER DEFAULT 0,
     FOREIGN KEY(farmId) REFERENCES farm(id)
   );
+
+    CREATE TABLE IF NOT EXISTS events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        zoneId INTEGER,
+        type TEXT,
+        note TEXT,
+        createdAt DATETIME DEFAULT (datetime('now')),
+        FOREIGN KEY(zoneId) REFERENCES zones(id)
+    );
 `);
 
 // Seed initial data if empty
@@ -92,6 +104,9 @@ async function startServer() {
     }
 
     // Clear old zones
+    // Delete events for these zones first to avoid FOREIGN KEY constraint failures,
+    // then remove the zones.
+    db.prepare("DELETE FROM events WHERE zoneId IN (SELECT id FROM zones WHERE farmId = ?)").run(farmId);
     db.prepare("DELETE FROM zones WHERE farmId = ?").run(farmId);
 
     // Insert new user-defined zones
@@ -105,7 +120,32 @@ async function startServer() {
         }
     }
 
-    res.json({ status: "success", id: farmId });
+    // Return the created/updated farm object including zones so frontend can update immediately
+    const farmRow = db.prepare("SELECT * FROM farm WHERE id = ?").get(farmId);
+    const zonesRows = db.prepare("SELECT * FROM zones WHERE farmId = ?").all(farmId);
+    const formattedZones = zonesRows.map((z: any) => ({
+        id: z.id,
+        farmId: z.farmId,
+        name: z.name,
+        crop: z.crop,
+        area: z.area,
+        status: z.status,
+        waterAccess: !!z.waterAccess
+    }));
+
+    res.json({
+        status: "success",
+        farm: {
+            id: farmRow.id,
+            name: farmRow.name,
+            location: farmRow.location,
+            latitude: farmRow.latitude,
+            longitude: farmRow.longitude,
+            area: farmRow.area,
+            irrigationType: farmRow.irrigationType,
+            zones: formattedZones
+        }
+    });
   });
 
   // Weather Proxy (WeatherAPI.com)
@@ -213,15 +253,27 @@ async function startServer() {
 
   // Soil Data Endpoint (Mocked based on location)
   app.get("/api/soil", (req, res) => {
-      // In a real app, use SoilGrids API with lat/lon
+      // In a real app, call SoilGrids or similar. Here we return mocked but location-aware data.
+      const lat = parseFloat(String(req.query.lat || req.body?.lat || '0')) || 0;
+      const lon = parseFloat(String(req.query.lon || req.body?.lon || '0')) || 0;
+
+      // Simple pseudo-random but deterministic seed from coords
+      const seed = Math.abs(Math.floor((lat * 1000 + lon * 1000))) % 100;
+
+      const phBase = 6.0 + (seed % 5) * 0.1; // 6.0 - 6.4
+      const moisture = 30 + (seed % 40); // 30 - 69
+      const nitrogenLevels = ['Low', 'Medium', 'High'];
+      const phosphorusLevels = ['Low', 'Medium', 'High'];
+      const potassiumLevels = ['Low', 'Medium', 'High'];
+
       res.json({
-          ph: 6.5,
-          texture: "Loamy",
-          moisture: "45%",
-          nitrogen: "Medium",
-          phosphorus: "High",
-          potassium: "Medium",
-          organic_matter: "2.1%"
+          ph: Number(phBase.toFixed(1)),
+          texture: seed % 3 === 0 ? 'Sandy' : seed % 3 === 1 ? 'Loamy' : 'Clayey',
+          moisture: `${moisture}%`,
+          nitrogen: nitrogenLevels[seed % nitrogenLevels.length],
+          phosphorus: phosphorusLevels[(seed + 1) % phosphorusLevels.length],
+          potassium: potassiumLevels[(seed + 2) % potassiumLevels.length],
+          organic_matter: `${(1.5 + (seed % 40) * 0.02).toFixed(1)}%`
       });
   });
 
@@ -420,6 +472,39 @@ async function startServer() {
   });
 
   // Vite middleware for development
+
+    // Zone actions: schedule irrigation
+    app.post('/api/zone/:id/schedule-irrigation', (req, res) => {
+        const zoneId = Number(req.params.id);
+        const { note } = req.body || {};
+        try {
+            // Insert event
+            db.prepare('INSERT INTO events (zoneId, type, note) VALUES (?, ?, ?)').run(zoneId, 'irrigation', note || 'Scheduled irrigation');
+            // Update zone status to 'Irrigation Scheduled'
+            db.prepare('UPDATE zones SET status = ? WHERE id = ?').run('Irrigation Scheduled', zoneId);
+            const zone = db.prepare('SELECT * FROM zones WHERE id = ?').get(zoneId);
+            res.json({ status: 'success', zone: { ...zone, waterAccess: !!zone.waterAccess } });
+        } catch (e) {
+            console.error('Schedule irrigation error:', e);
+            res.status(500).json({ status: 'error', message: 'Failed to schedule irrigation' });
+        }
+    });
+
+    // Zone actions: log harvest
+    app.post('/api/zone/:id/log-harvest', (req, res) => {
+        const zoneId = Number(req.params.id);
+        const { note } = req.body || {};
+        try {
+            db.prepare('INSERT INTO events (zoneId, type, note) VALUES (?, ?, ?)').run(zoneId, 'harvest', note || 'Harvest logged');
+            // Optionally set zone status to Resting after harvest
+            db.prepare('UPDATE zones SET status = ? WHERE id = ?').run('Resting', zoneId);
+            const zone = db.prepare('SELECT * FROM zones WHERE id = ?').get(zoneId);
+            res.json({ status: 'success', zone: { ...zone, waterAccess: !!zone.waterAccess } });
+        } catch (e) {
+            console.error('Log harvest error:', e);
+            res.status(500).json({ status: 'error', message: 'Failed to log harvest' });
+        }
+    });
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },

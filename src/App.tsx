@@ -12,6 +12,8 @@ import { Modal } from './components/ui/Modal';
 import { LandForm } from './components/LandForm';
 import { FarmSimulator } from './components/FarmSimulator';
 import { SocialFeed } from './components/SocialFeed';
+import VoiceButton from './components/ui/VoiceButton';
+import { t } from './i18n';
 
 // Types
 interface FarmData {
@@ -35,6 +37,9 @@ export default function App() {
   
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedZone, setSelectedZone] = useState<any>(null);
+  const [voiceActive, setVoiceActive] = useState(false);
+  // Simple toast
+  const [toast, setToast] = useState<{message: string; type?: 'success'|'error'} | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEditingFarm, setIsEditingFarm] = useState(false);
@@ -53,18 +58,53 @@ export default function App() {
   const [selectedMarket, setSelectedMarket] = useState<any>(null);
 
   useEffect(() => {
-    fetchFarmData();
-    fetchSubsidies();
-    fetchSoilData();
-    fetchCalendar();
+    // Listen for voice play/stop events from voiceService and update tab title
+    const onPlay = () => { document.title = '🔊 Kissan & Co'; setVoiceActive(true); };
+    const onStop = () => { document.title = 'Kissan & Co'; setVoiceActive(false); };
+    window.addEventListener('voice:play', onPlay as EventListener);
+    window.addEventListener('voice:stop', onStop as EventListener);
+    return () => { window.removeEventListener('voice:play', onPlay as EventListener); window.removeEventListener('voice:stop', onStop as EventListener); };
+
+    // Try to load farm from server, fall back to localStorage when offline
+    (async () => {
+      await fetchFarmData();
+      fetchSubsidies();
+      fetchCalendar();
+
+      // Request geolocation to provide better soil data when user allows
+      if (navigator && (navigator as any).geolocation) {
+        (navigator as any).geolocation.getCurrentPosition(async (pos: any) => {
+          const { latitude, longitude } = pos.coords;
+          await fetchSoilData(latitude, longitude);
+          // If farm exists but lacks coordinates, fetch weather now
+          if (farm && (!farm.latitude || !farm.longitude)) {
+            fetchWeather(latitude, longitude);
+          }
+        }, async () => {
+          // Permission denied or unavailable: fetch generic soil data
+          await fetchSoilData();
+        });
+      } else {
+        await fetchSoilData();
+      }
+    })();
   }, []);
 
-  const fetchSoilData = async () => {
+  const fetchSoilData = async (lat?: number, lon?: number) => {
     try {
-      const res = await fetch('/api/soil');
+      const url = lat && lon ? `/api/soil?lat=${lat}&lon=${lon}` : '/api/soil';
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Soil API error');
       const data = await res.json();
       setSoil(data);
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error('Failed to fetch soil data', e);
+      // If backend is unreachable, try to use last saved soil in localStorage
+      try {
+        const cached = localStorage.getItem('kissan_soil');
+        if (cached) setSoil(JSON.parse(cached));
+      } catch (_) {}
+    }
   };
 
   const fetchCalendar = async () => {
@@ -96,6 +136,22 @@ export default function App() {
       }
     } catch (e) {
       console.error("Failed to fetch farm data", e);
+      // Backend might be down. Try to load from localStorage so app remains usable.
+      try {
+        const cached = localStorage.getItem('kissan_farm');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          setFarm(parsed);
+          // If we have coords, fetch weather/soil/market
+          if (parsed.latitude && parsed.longitude) {
+            fetchWeather(parsed.latitude, parsed.longitude);
+            fetchMarket();
+            fetchSoilData(parsed.latitude, parsed.longitude);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load local farm', err);
+      }
     } finally {
       setLoading(false);
     }
@@ -118,6 +174,89 @@ export default function App() {
       setMarket(data);
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const showToast = (message: string, type: 'success'|'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  // Persist farm and soil to localStorage when they change so app is resilient offline
+  useEffect(() => {
+    try {
+      if (farm) localStorage.setItem('kissan_farm', JSON.stringify(farm));
+    } catch (_) {}
+  }, [farm]);
+
+  useEffect(() => {
+    try {
+      if (soil) localStorage.setItem('kissan_soil', JSON.stringify(soil));
+    } catch (_) {}
+  }, [soil]);
+
+  const scheduleIrrigation = async (zoneId: number) => {
+    try {
+      const res = await fetch(`/api/zone/${zoneId}/schedule-irrigation`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+      if (res.ok) {
+        const body = await res.json();
+        // Update local farm zones
+        setFarm(prev => {
+          if (!prev) return prev;
+          return { ...prev, zones: prev.zones.map((z: any) => z.id === body.zone.id ? body.zone : z) } as any;
+        });
+        setSelectedZone((sz: any) => sz && sz.id === body.zone.id ? body.zone : sz);
+        showToast('Irrigation scheduled', 'success');
+      } else {
+        showToast('Failed to schedule irrigation', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      // Network error: apply optimistic update locally and persist event
+      showToast('Network error while scheduling irrigation — saved locally', 'error');
+      setFarm(prev => {
+        if (!prev) return prev;
+        const updated = { ...prev, zones: prev.zones.map((z: any) => z.id === zoneId ? { ...z, status: 'Irrigation Scheduled' } : z) } as any;
+        try { localStorage.setItem('kissan_farm', JSON.stringify(updated)); } catch (_) {}
+        // record event
+        try {
+          const events = JSON.parse(localStorage.getItem('kissan_events') || '[]');
+          events.push({ zoneId, type: 'irrigation', note: 'Scheduled (local)', createdAt: new Date().toISOString() });
+          localStorage.setItem('kissan_events', JSON.stringify(events));
+        } catch (_) {}
+        return updated;
+      });
+    }
+  };
+
+  const logHarvest = async (zoneId: number) => {
+    try {
+      const res = await fetch(`/api/zone/${zoneId}/log-harvest`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+      if (res.ok) {
+        const body = await res.json();
+        setFarm(prev => {
+          if (!prev) return prev;
+          return { ...prev, zones: prev.zones.map((z: any) => z.id === body.zone.id ? body.zone : z) } as any;
+        });
+        setSelectedZone((sz: any) => sz && sz.id === body.zone.id ? body.zone : sz);
+        showToast('Harvest logged', 'success');
+      } else {
+        showToast('Failed to log harvest', 'error');
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('Network error while logging harvest — saved locally', 'error');
+      setFarm(prev => {
+        if (!prev) return prev;
+        const updated = { ...prev, zones: prev.zones.map((z: any) => z.id === zoneId ? { ...z, status: 'Resting' } : z) } as any;
+        try { localStorage.setItem('kissan_farm', JSON.stringify(updated)); } catch (_) {}
+        try {
+          const events = JSON.parse(localStorage.getItem('kissan_events') || '[]');
+          events.push({ zoneId, type: 'harvest', note: 'Logged (local)', createdAt: new Date().toISOString() });
+          localStorage.setItem('kissan_events', JSON.stringify(events));
+        } catch (_) {}
+        return updated;
+      });
     }
   };
 
@@ -192,13 +331,40 @@ export default function App() {
 
   const handleCreateFarm = async (data: any) => {
     try {
+      // Optimistic update: set local farm immediately so the dashboard renders even if the backend
+      // is not reachable during local development. We will reconcile with the server response later.
+      const optimisticFarm = {
+        id: -1,
+        name: data.name,
+        location: data.location,
+        latitude: data.latitude ?? 20.5937,
+        longitude: data.longitude ?? 78.9629,
+        area: data.area ?? 0,
+        irrigationType: data.irrigationType ?? 'Drip',
+        zones: data.zones || []
+      };
+      setFarm(optimisticFarm as any);
+      setActiveTab('overview');
+
       const res = await fetch('/api/farm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
+
       if (res.ok) {
-        fetchFarmData();
+        const body = await res.json();
+        if (body && body.farm) {
+          setFarm(body.farm);
+          fetchWeather(body.farm.latitude, body.farm.longitude);
+          fetchMarket();
+        } else {
+          // If server didn't return a farm, refresh from GET as a fallback
+          await fetchFarmData();
+        }
+      } else {
+        // If POST failed, keep optimistic UI but log error
+        console.error('Failed to save farm on server', res.status, await res.text());
       }
     } catch (e) {
       console.error(e);
@@ -210,6 +376,12 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-[#F2F4F1] overflow-hidden font-sans text-gray-900 selection:bg-green-100 selection:text-green-900">
+      {/* Toasts */}
+      {toast && (
+        <div className={`fixed right-6 top-6 z-60 px-4 py-3 rounded-lg shadow-lg ${toast.type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>
+          {toast.message}
+        </div>
+      )}
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -439,6 +611,10 @@ export default function App() {
             <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white shadow-md overflow-hidden">
                 <img src="https://picsum.photos/seed/farmer/200/200" alt="Profile" className="w-full h-full object-cover" />
             </div>
+            <div className="hidden md:flex items-center gap-3">
+              <div className={`w-2 h-2 rounded-full ${voiceActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-300'}`} title={voiceActive ? 'Voice playing' : 'Voice idle'} />
+              <VoiceButton lang={'kn'} className="hidden lg:inline-flex" text={t('kn','greeting')} />
+            </div>
           </div>
         </header>
 
@@ -485,18 +661,19 @@ export default function App() {
                         <h2 className="text-xl md:text-2xl font-display font-bold text-gray-900">Farm Visualization</h2>
                         <p className="text-sm md:text-base text-gray-500 mt-1">Real-time zone monitoring & irrigation status</p>
                     </div>
-                    <div className="flex gap-2 bg-gray-50 p-1 rounded-xl border border-gray-100">
-                      <button className="px-3 py-1.5 md:px-4 md:py-2 text-xs font-bold bg-white border border-gray-200 rounded-lg shadow-sm text-gray-800">2D Map</button>
-                      <button className="px-3 py-1.5 md:px-4 md:py-2 text-xs font-bold text-gray-500 hover:text-gray-700 hidden sm:block">Satellite</button>
+                    <div className="flex items-center gap-3 text-sm text-gray-500">
+                      <span className="px-3 py-1.5 rounded-lg bg-white border border-gray-100 shadow-sm font-semibold">Visualization</span>
+                      <span className="text-xs text-gray-400">Simplified view focused on zones</span>
                     </div>
                   </div>
                   <div className="flex-1 relative rounded-2xl overflow-hidden border border-gray-100 bg-gray-50">
-                    <FarmMap 
-                        zones={farm.zones} 
-                        area={farm.area} 
-                        onSelectZone={setSelectedZone}
-                        selectedZoneId={selectedZone?.id}
-                    />
+          <FarmMap 
+            zones={farm.zones} 
+            area={farm.area} 
+            onSelectZone={setSelectedZone}
+            selectedZoneId={selectedZone?.id}
+            mode={'2d'}
+          />
                   </div>
                 </div>
 
@@ -998,12 +1175,12 @@ export default function App() {
                 <div className="space-y-3">
                     <h5 className="font-bold text-gray-900">Quick Actions</h5>
                     <div className="grid grid-cols-2 gap-3">
-                        <button className="py-2.5 px-4 bg-blue-50 text-blue-700 font-bold rounded-xl hover:bg-blue-100 transition-colors text-sm">
-                            Schedule Irrigation
-                        </button>
-                        <button className="py-2.5 px-4 bg-orange-50 text-orange-700 font-bold rounded-xl hover:bg-orange-100 transition-colors text-sm">
-                            Log Harvest
-                        </button>
+            <button onClick={() => selectedZone && scheduleIrrigation(selectedZone.id)} className="py-2.5 px-4 bg-blue-50 text-blue-700 font-bold rounded-xl hover:bg-blue-100 transition-colors text-sm">
+              Schedule Irrigation
+            </button>
+            <button onClick={() => selectedZone && logHarvest(selectedZone.id)} className="py-2.5 px-4 bg-orange-50 text-orange-700 font-bold rounded-xl hover:bg-orange-100 transition-colors text-sm">
+              Log Harvest
+            </button>
                     </div>
                 </div>
             </div>

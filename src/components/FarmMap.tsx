@@ -7,6 +7,7 @@ interface FarmMapProps {
   area: number;
   onSelectZone: (zone: any) => void;
   selectedZoneId?: number | null;
+  mode?: '2d' | 'satellite';
 }
 
 interface ZoneShape {
@@ -17,7 +18,7 @@ interface ZoneShape {
   path: string;
 }
 
-function cropPalette(crop: string | undefined, status: string | undefined, mode: 'layout' | 'satellite') {
+function cropPalette(crop: string | undefined, status: string | undefined, mode: '2d' | 'satellite') {
   if (mode === 'satellite') {
     if (status !== 'Active') return { fill: '#7c8a5d', stroke: '#5f6f45' };
     if (!crop) return { fill: '#7b8f63', stroke: '#5f7348' };
@@ -39,8 +40,9 @@ function cropPalette(crop: string | undefined, status: string | undefined, mode:
   return { fill: '#DBEAFE', stroke: '#60A5FA' };
 }
 
-export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapProps) {
-  const [mode, setMode] = useState<'layout' | 'satellite'>('layout');
+export function FarmMap({ zones, area, onSelectZone, selectedZoneId, mode = '2d' }: FarmMapProps) {
+  // Visualization mode is simplified; we focus on 2D visualization only
+  const localMode = mode === 'satellite' ? 'satellite' : '2d';
 
   const width = 900;
   const height = 640;
@@ -79,35 +81,24 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
   }, [zones]);
 
   return (
-    <div className="w-full h-full min-h-[320px] md:min-h-[520px] rounded-3xl relative overflow-hidden shadow-inner border border-gray-200 group">
-      <div
-        className={`absolute inset-0 ${mode === 'satellite' ? 'bg-[#5d6f49]' : 'bg-[#F3F4F6]'}`}
-        style={
-          mode === 'satellite'
-            ? {
-                backgroundImage:
-                  'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 40%), radial-gradient(circle at 80% 25%, rgba(0,0,0,0.14), transparent 40%), linear-gradient(135deg, #5f724a 0%, #6e8158 50%, #77895f 100%)',
-              }
-            : {
-                backgroundImage: 'radial-gradient(#9CA3AF 1px, transparent 1px)',
-                backgroundSize: '22px 22px',
-                opacity: 0.25,
-              }
-        }
-      />
+    <div className="w-full h-full min-h-[300px] md:min-h-[500px] bg-[#F3F4F6] rounded-3xl relative overflow-hidden shadow-inner border border-gray-200 group">
+      {/* Background Texture */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none" 
+           style={{ backgroundImage: 'radial-gradient(#9CA3AF 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
+      </div>
 
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full absolute inset-0" preserveAspectRatio="xMidYMid meet">
         <path
           d={`M ${padding / 2} ${padding / 2} H ${width - padding / 2} V ${height - padding / 2} H ${padding / 2} Z`}
           fill="none"
-          stroke={mode === 'satellite' ? 'rgba(226,232,240,0.45)' : '#D1D5DB'}
+          stroke={localMode === 'satellite' ? 'rgba(226,232,240,0.45)' : '#D1D5DB'}
           strokeWidth="2"
           strokeDasharray="10,10"
         />
 
         <path
           d={`M ${padding - 8} ${height * 0.28} C ${width * 0.3} ${height * 0.22}, ${width * 0.45} ${height * 0.34}, ${width - padding + 6} ${height * 0.25}`}
-          stroke={mode === 'satellite' ? 'rgba(191,219,254,0.45)' : 'rgba(59,130,246,0.25)'}
+          stroke={localMode === 'satellite' ? 'rgba(191,219,254,0.45)' : 'rgba(59,130,246,0.25)'}
           strokeWidth="5"
           fill="none"
           strokeDasharray="12,8"
@@ -115,7 +106,7 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
 
         <path
           d={`M ${padding - 6} ${height * 0.72} Q ${width * 0.5} ${height * 0.62} ${width - padding + 6} ${height * 0.75}`}
-          stroke={mode === 'satellite' ? 'rgba(203,213,225,0.45)' : 'rgba(148,163,184,0.5)'}
+          stroke={localMode === 'satellite' ? 'rgba(203,213,225,0.45)' : 'rgba(148,163,184,0.5)'}
           strokeWidth="8"
           fill="none"
         />
@@ -125,7 +116,7 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
           if (!shape) return null;
 
           const isSelected = selectedZoneId === zone.id;
-          const palette = cropPalette(zone.crop, zone.status, mode);
+          const palette = cropPalette(zone.crop, zone.status, localMode);
 
           return (
             <g key={zone.id || index} onClick={() => onSelectZone(zone)} className="cursor-pointer" style={{ transformOrigin: `${shape.x + shape.w / 2}px ${shape.y + shape.h / 2}px` }}>
@@ -133,7 +124,7 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
                 d={shape.path}
                 fill="rgba(0,0,0,0.18)"
                 transform="translate(4 5)"
-                opacity={mode === 'satellite' ? 0.22 : 0.08}
+                opacity={localMode === 'satellite' ? 0.22 : 0.08}
               />
 
               <motion.path
@@ -148,7 +139,7 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
               />
 
               {zone.waterAccess && (
-                <g opacity={mode === 'satellite' ? 0.5 : 0.4}>
+                <g opacity={localMode === 'satellite' ? 0.5 : 0.4}>
                   {[1, 2, 3].map((i) => (
                     <line
                       key={i}
@@ -156,7 +147,7 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
                       y1={shape.y + (shape.h / 4) * i}
                       x2={shape.x + shape.w - 10}
                       y2={shape.y + (shape.h / 4) * i}
-                      stroke={mode === 'satellite' ? '#BFDBFE' : '#3B82F6'}
+                      stroke={localMode === 'satellite' ? '#BFDBFE' : '#3B82F6'}
                       strokeWidth="1.6"
                       strokeDasharray="5,4"
                     />
@@ -166,10 +157,10 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
 
               <foreignObject x={shape.x + 8} y={shape.y + 8} width={shape.w - 16} height={shape.h - 16} className="pointer-events-none">
                 <div className="w-full h-full flex flex-col items-center justify-center text-center">
-                  <span className={`font-display font-bold text-base tracking-tight ${mode === 'satellite' ? 'text-white drop-shadow' : 'text-gray-800'}`}>
+                  <span className={`font-display font-bold text-base tracking-tight ${localMode === 'satellite' ? 'text-white drop-shadow' : 'text-gray-800'}`}>
                     {zone.name}
                   </span>
-                  <span className={`text-[11px] mt-1 px-2 py-0.5 rounded-full ${mode === 'satellite' ? 'bg-black/30 text-gray-100' : 'bg-white/70 text-gray-500'}`}>
+                  <span className={`text-[11px] mt-1 px-2 py-0.5 rounded-full ${localMode === 'satellite' ? 'bg-black/30 text-gray-100' : 'bg-white/70 text-gray-500'}`}>
                     {zone.crop || 'Fallow'}
                   </span>
                   {isSelected && (
@@ -184,20 +175,7 @@ export function FarmMap({ zones, area, onSelectZone, selectedZoneId }: FarmMapPr
         })}
       </svg>
 
-      <div className="absolute top-4 left-4 flex items-center gap-2">
-        <button
-          onClick={() => setMode('layout')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${mode === 'layout' ? 'bg-white text-gray-800 border-gray-300' : 'bg-white/70 text-gray-500 border-gray-200'}`}
-        >
-          Layout
-        </button>
-        <button
-          onClick={() => setMode('satellite')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${mode === 'satellite' ? 'bg-emerald-600 text-white border-emerald-500' : 'bg-white/70 text-gray-500 border-gray-200'}`}
-        >
-          Satellite Mock
-        </button>
-      </div>
+      {/* Simple controls removed - focus on a single clear visualization */}
 
       <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
         <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm border border-gray-200 text-xs font-medium text-gray-600 flex items-center gap-1.5">
