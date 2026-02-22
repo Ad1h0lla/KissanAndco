@@ -1,6 +1,17 @@
-<<<<<<< HEAD
 const translations: Record<string, Record<string, string>> = {
   en: {
+    // Onboarding
+    greeting_onboard: 'Hello! I am your farm advisor. Let us collect your land details.',
+    ask_location: 'Please tell your farm location (village, district).',
+    ask_area: 'How many acres is your land?',
+    ask_crop: 'What crop are you currently growing?',
+    confirm_onboard: 'Tap "Confirm" to create your farm.',
+    next: 'Next',
+    back: 'Back',
+    confirm_btn: 'Confirm',
+    creating: 'Creating your farm...',
+    created: 'Farm created — welcome to the dashboard!',
+
     // Header & Navigation
     greeting: 'Hello',
     listen: 'Listen',
@@ -10,7 +21,7 @@ const translations: Record<string, Record<string, string>> = {
     language: 'Language',
     logout: 'Logout',
     settings: 'Settings',
-    
+
     // Sidebar
     overview: 'Overview',
     calendar: 'Calendar',
@@ -21,21 +32,21 @@ const translations: Record<string, Record<string, string>> = {
     marketplace: 'Marketplace',
     subsidies: 'Subsidies',
     tutorial: 'Tutorial',
-    
+
     // Overview Tab
     farmName: 'Farm Name',
     farmLocation: 'Location',
     landArea: 'Land Area',
     irrigationType: 'Irrigation Type',
     currentCrop: 'Current Crop',
-    
+
     // Weather Panel
     temperature: 'Temperature',
     humidity: 'Humidity',
     windSpeed: 'Wind Speed',
     rainfall: 'Rainfall',
     weatherUnavailable: 'Weather data unavailable',
-    
+
     // Soil Panel
     soilMoisture: 'Soil Moisture',
     soilType: 'Soil Type',
@@ -43,7 +54,7 @@ const translations: Record<string, Record<string, string>> = {
     phosphorus: 'Phosphorus',
     potassium: 'Potassium',
     soilUnavailable: 'Soil data unavailable',
-    
+
     // Farm Map / Zones
     zones: 'Zones',
     crop: 'Crop',
@@ -54,19 +65,19 @@ const translations: Record<string, Record<string, string>> = {
     fallow: 'Fallow',
     scheduleIrrigation: 'Schedule Irrigation',
     logHarvest: 'Log Harvest',
-    
+
     // AI Advisor
     askAdvisor: 'Ask AI Advisor',
     getCropSuggestions: 'Get Crop Suggestions',
     cropSuggestions: 'Crop Suggestions',
     irrigationLayout: 'Irrigation Layout',
     expectedYield: 'Expected Yield',
-    
+
     // Simulator
     simulateProfit: 'Simulate Profit',
     yieldEstimate: 'Yield Estimate',
     profitEstimate: 'Profit Estimate',
-    
+
     // Marketplace
     sellProduce: 'Sell Produce',
     cropName: 'Crop Name',
@@ -74,13 +85,13 @@ const translations: Record<string, Record<string, string>> = {
     price: 'Price',
     contact: 'Contact',
     postListing: 'Post Listing',
-    
+
     // Subsidies
     eligibleSchemes: 'Eligible Schemes',
     schemeName: 'Scheme Name',
     eligibility: 'Eligibility',
     benefits: 'Benefits',
-    
+
     // Tutorial Cards
     tutorialTitle: 'Farm Guide',
     farmOverview: 'Farm Overview',
@@ -91,7 +102,7 @@ const translations: Record<string, Record<string, string>> = {
     simulatorDesc: 'Estimate your profit and yield',
     marketplaceDesc: 'Buy and sell farm produce directly',
     subsidiesDesc: 'Find government schemes you qualify for',
-    
+
     // Additional UI Strings
     farmVisualization: 'Farm Visualization',
     realtimeMonitoring: 'Real-time zone monitoring & irrigation status',
@@ -133,7 +144,7 @@ const translations: Record<string, Record<string, string>> = {
     farmingCalendar: 'Farming Calendar',
     upcomingTasks: 'Upcoming tasks and harvest windows.',
     comingSoon: 'Coming Soon',
-    
+
     // Common
     loading: 'Loading...',
     irrigationCost: 'Irrigation Cost',
@@ -142,9 +153,6 @@ const translations: Record<string, Record<string, string>> = {
     perMonth: '/mo',
     hoursAgo: 'hours ago',
     headingsHelp: 'Help',
-    
-    // Common
-    loading: 'Loading...',
     save: 'Save',
     cancel: 'Cancel',
     delete: 'Delete',
@@ -156,6 +164,18 @@ const translations: Record<string, Record<string, string>> = {
     success: 'Success'
   },
   hi: {
+    // Onboarding
+    greeting_onboard: 'नमस्ते! मैं आपका कृषि सलाहकार हूँ। अपने खेत का विवरण बताइए।',
+    ask_location: 'कृपया अपने खेत का स्थान बताइए (गाँव/जिला)।',
+    ask_area: 'अपने खेत का आकार कितने एकड़ है?',
+    ask_crop: 'आप कौन सी फ़सल उगा रहे हैं?',
+    confirm_onboard: 'डैशबोर्ड बनाने के लिए "पुष्टि करें" दबाएँ।',
+    next: 'आगे',
+    back: 'पीछे',
+    confirm_btn: 'पुष्टि करें',
+    creating: 'खेत बनाया जा रहा है...',
+    created: 'खेत बनाया गया — डैशबोर्ड पर आपका स्वागत है!',
+
     // Header & Navigation
     greeting: 'नमस्ते',
     listen: 'सुनें',
@@ -165,7 +185,7 @@ const translations: Record<string, Record<string, string>> = {
     language: 'भाषा',
     logout: 'लॉगआउट',
     settings: 'सेटिंग्स',
-    
+
     // Sidebar
     overview: 'अवलोकन',
     calendar: 'कैलेंडर',
@@ -176,21 +196,21 @@ const translations: Record<string, Record<string, string>> = {
     marketplace: 'बाजार',
     subsidies: 'सब्सिडी',
     tutorial: 'ट्यूटोरियल',
-    
+
     // Overview Tab
     farmName: 'खेत का नाम',
     farmLocation: 'स्थान',
     landArea: 'भूमि क्षेत्र',
     irrigationType: 'सिंचाई प्रकार',
     currentCrop: 'वर्तमान फसल',
-    
+
     // Weather Panel
     temperature: 'तापमान',
     humidity: 'नमी',
     windSpeed: 'हवा की गति',
     rainfall: 'वर्षा',
     weatherUnavailable: 'मौसम डेटा उपलब्ध नहीं',
-    
+
     // Soil Panel
     soilMoisture: 'मिट्टी की नमी',
     soilType: 'मिट्टी का प्रकार',
@@ -198,7 +218,7 @@ const translations: Record<string, Record<string, string>> = {
     phosphorus: 'फॉस्फोरस',
     potassium: 'पोटेशियम',
     soilUnavailable: 'मिट्टी डेटा उपलब्ध नहीं',
-    
+
     // Farm Map / Zones
     zones: 'क्षेत्र',
     crop: 'फसल',
@@ -209,19 +229,19 @@ const translations: Record<string, Record<string, string>> = {
     fallow: 'परती',
     scheduleIrrigation: 'सिंचाई शेड्यूल करें',
     logHarvest: 'कटाई लॉग करें',
-    
+
     // AI Advisor
     askAdvisor: 'AI सलाहकार से पूछें',
     getCropSuggestions: 'फसल सुझाव प्राप्त करें',
     cropSuggestions: 'फसल सुझाव',
     irrigationLayout: 'सिंचाई लेआउट',
     expectedYield: 'अपेक्षित उपज',
-    
+
     // Simulator
     simulateProfit: 'लाभ का अनुमान लगाएँ',
     yieldEstimate: 'उपज अनुमान',
     profitEstimate: 'लाभ अनुमान',
-    
+
     // Marketplace
     sellProduce: 'उपज बेचें',
     cropName: 'फसल का नाम',
@@ -229,13 +249,13 @@ const translations: Record<string, Record<string, string>> = {
     price: 'कीमत',
     contact: 'संपर्क',
     postListing: 'सूची पोस्ट करें',
-    
+
     // Subsidies
     eligibleSchemes: 'योग्य योजनाएँ',
     schemeName: 'योजना का नाम',
     eligibility: 'पात्रता',
     benefits: 'लाभ',
-    
+
     // Tutorial Cards
     tutorialTitle: 'खेत गाइड',
     farmOverview: 'खेत अवलोकन',
@@ -246,7 +266,7 @@ const translations: Record<string, Record<string, string>> = {
     simulatorDesc: 'अपने लाभ और उपज का अनुमान लगाएँ',
     marketplaceDesc: 'सीधे खेत की उपज खरीदें और बेचें',
     subsidiesDesc: 'सरकारी योजनाएँ खोजें जिनके लिए आप योग्य हैं',
-    
+
     // Additional UI Strings
     farmVisualization: 'खेत की कल्पना करें',
     realtimeMonitoring: 'वास्तविक समय क्षेत्र निगरानी और सिंचाई स्थिति',
@@ -282,10 +302,7 @@ const translations: Record<string, Record<string, string>> = {
     projected: 'अनुमानित',
     perMonth: '/माह',
     hoursAgo: 'घंटे पहले',
-    headingsHelp: 'मदद',
-    
-    // Common
-    loading: 'लोड हो रहा है...',
+    headingsHelp: 'मदದ',
     save: 'सहेजें',
     cancel: 'रद्द करें',
     delete: 'हटाएँ',
@@ -297,6 +314,18 @@ const translations: Record<string, Record<string, string>> = {
     success: 'सफलता'
   },
   kn: {
+    // Onboarding
+    greeting_onboard: 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ರಸ್ತೆಗಾರ ಸಲಹೆಗಾರ. ನಿಮ್ಮ ಭೂಮಿಯ ಮಾಹಿತಿಯನ್ನು ತಲುಪಿಸೋಣ.',
+    ask_location: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಭೂಮಿಯ ಸ್ಥಳವನ್ನು ಹೇಳಿ (ಉದಾಹರಣೆ: ಗ್ರಾಮ, ಜಿಲ್ಲ)',
+    ask_area: 'ಭೂಮಿಯ ಗಾತ್ರವನ್ನು ಎಕರೆಗಳಲ್ಲಿ ತಿಳಿಸಿ.',
+    ask_crop: 'ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಬೆಳೆ ಯಾವುದು?',
+    confirm_onboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಸೃಷ್ಟಿಸಲು "ದೃಢೀಕರಿಸಿ" ಕ್ಲಿಕ್ ಮಾಡಿ.',
+    next: 'ಮುಂದೆ',
+    back: 'ಹಿಂದೆ',
+    confirm_btn: 'ದೃಢೀಕರಿಸಿ',
+    creating: 'ಭೂಮಿಯನ್ನು ಸೃಷ್ಟಿಸಲಾಗುತ್ತಿದೆ...',
+    created: 'ಭೂಮಿಯನ್ನು ಸೃಷ್ಟಿಸಲಾಗಿದೆ — ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸ್ವಾಗತ!',
+
     // Header & Navigation
     greeting: 'ನಮಸ್ಕಾರ',
     listen: 'ಕೇಳು',
@@ -306,7 +335,7 @@ const translations: Record<string, Record<string, string>> = {
     language: 'ಭಾಷೆ',
     logout: 'ಲಾಗ್‌ ಔಟ್',
     settings: 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
-    
+
     // Sidebar
     overview: 'ಅವಲೋಕನ',
     calendar: 'ಕ್ಯಾಲೆಂಡರ್',
@@ -317,21 +346,21 @@ const translations: Record<string, Record<string, string>> = {
     marketplace: 'ಮಾರುಕಟ್ಟೆ',
     subsidies: 'ಸಹಾಯಕ',
     tutorial: 'ಪರಿಚಯ',
-    
+
     // Overview Tab
     farmName: 'ಹೊಲದ ಹೆಸರು',
     farmLocation: 'ಸ್ಥಳ',
     landArea: 'ಭೂಮಿ ಪ್ರದೇಶ',
     irrigationType: 'ನೀರಾವರಣ ಪ್ರಕಾರ',
     currentCrop: 'ಪ್ರಸ್ತುತ ಬೆಳೆ',
-    
+
     // Weather Panel
     temperature: 'ಉಷ್ಣತೆ',
     humidity: 'ಆರ್ದ್ರತೆ',
     windSpeed: 'ಗಾಳಿಯ ವೇಗ',
     rainfall: 'ಮಳೆ',
     weatherUnavailable: 'ಹವಾಮಾನ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ',
-    
+
     // Soil Panel
     soilMoisture: 'ಮಣ್ಣಿನ ತೇವಾಂಶ',
     soilType: 'ಮಣ್ಣಿನ ಪ್ರಕಾರ',
@@ -339,7 +368,7 @@ const translations: Record<string, Record<string, string>> = {
     phosphorus: 'ಫಾಸ್ಫರಸ್',
     potassium: 'ಪೋಟಾಶಿಯಮ್',
     soilUnavailable: 'ಮಣ್ಣಿನ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ',
-    
+
     // Farm Map / Zones
     zones: 'ವಲಯಗಳು',
     crop: 'ಬೆಳೆ',
@@ -350,19 +379,19 @@ const translations: Record<string, Record<string, string>> = {
     fallow: 'ಕೆಳ ಭೂಮಿ',
     scheduleIrrigation: 'ನೀರಾವರಣ ಅವಧಿ ನಿರ್ಧರಿಸಿ',
     logHarvest: 'ಸುಗ್ಗಿ ಲಾಗ್ ಮಾಡಿ',
-    
+
     // AI Advisor
     askAdvisor: 'AI ಪರಾಮರ್ಶದಾತರನ್ನು ಕೇಳಿ',
     getCropSuggestions: 'ಬೆಳೆ ಸಲಹೆ ಪಡೆಯಿರಿ',
     cropSuggestions: 'ಬೆಳೆ ಸಲಹೆ',
     irrigationLayout: 'ನೀರಾವರಣ ಲೇಔಟ್',
     expectedYield: 'ನಿರೀಕ್ಷಿತ ಫಲ',
-    
+
     // Simulator
     simulateProfit: 'ಲಾಭ ಅನುಕರಣೆ',
     yieldEstimate: 'ಫಲ ಅಂದಾಜು',
     profitEstimate: 'ಲಾಭ ಅಂದಾಜು',
-    
+
     // Marketplace
     sellProduce: 'ಹಸಿರು ಮಾರಿ',
     cropName: 'ಬೆಳೆಯ ಹೆಸರು',
@@ -370,13 +399,13 @@ const translations: Record<string, Record<string, string>> = {
     price: 'ಬೆಲೆ',
     contact: 'ಸಂಪರ್ಕ',
     postListing: 'ಪಟ್ಟಿ ಪೋಸ್ಟ್ ಮಾಡಿ',
-    
+
     // Subsidies
     eligibleSchemes: 'ಯೋಗ್ಯ ಯೋಜನೆಗಳು',
     schemeName: 'ಯೋಜನೆಯ ಹೆಸರು',
     eligibility: 'ಯೋಗ್ಯತೆ',
     benefits: 'ಪ್ರಯೋಜನಗಳು',
-    
+
     // Tutorial Cards
     tutorialTitle: 'ಹೊಲ ಮಾರ್ಗದರ್ಶನ',
     farmOverview: 'ಹೊಲದ ಅವಲೋಕನ',
@@ -387,7 +416,7 @@ const translations: Record<string, Record<string, string>> = {
     simulatorDesc: 'ನಿಮ್ಮ ಲಾಭ ಮತ್ತು ಫಲ ಅಂದಾಜು ಮಾಡಿ',
     marketplaceDesc: 'ನೇರವಾಗಿ ಹೊಲದ ಮೈಲಾಶ್ರಯ ಖರೀದಿ ಮಾಡಿ ಮತ್ತು ಮಾರಿ',
     subsidiesDesc: 'ನೀವು ಅರ್ಹತೆ ಹೊಂದಿರುವ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಿ',
-    
+
     // Additional UI Strings
     farmVisualization: 'ಹೊಲದ ದೃಶ್ಯೀಕರಣ',
     realtimeMonitoring: 'ಮುಕ್ತ ವಲಯ ಮೇಲ್ವಿಚಾರಣೆ ಮತ್ತು ನೀರಾವರಣ ಸ್ಥಿತಿ',
@@ -400,7 +429,7 @@ const translations: Record<string, Record<string, string>> = {
     updatedToday: 'ಇಂದು ನವೀಕರಿಸಲಾಗಿದೆ',
     notifications: 'ಸೂಚನೆಗಳು',
     heavyRainAlert: 'ಭಾರೀ ಮಳೆಯ ಎಚ್ಚರಿಕೆ',
-    expectedTomorrow: 'ನಾಳೆ ಸಂಜೆ 2:00 ಕ್ಕೆ ನಿರೀಕ್ಷಿತ। ವಲಯ A ಗಾಗಿ ನಿರ್ಧಾರಿತ ನೀರಾವರಣ ವಿರಾಮಗೊಳಿಸುವಿಕೆಯನ್ನು ನಾವು ಶಿಫಾರಸು ಮಾಡುತ್ತೇವೆ.',
+    expectedTomorrow: 'ನಾಳೆ ಸಂಜೆ 2:00 ಕ್ಕ್ಕೆ ನಿರೀಕ್ಷಿತ। ವಲಯ A ಗಾಗಿ ನಿರ್ಧಾರಿತ ನೀರಾವರಣ ವಿರಾಮಗೊಳಿಸುವಿಕೆಯನ್ನು ನಾವು ಶಿಫಾರಸು ಮಾಡುತ್ತೇವೆ.',
     pestWarning: 'ಕೀಟ ಎಚ್ಚರಿಕೆ: ವಲಯ B',
     aphidActivity: 'ಅಕ್ರಮೇಯ ಹೊಸ್ನ (5 ಕಿ.ಮೀ ತ್ರಿಜ್ಯ) ಪ್ರತಿಫಲ ಶಿಫಾರಸು ಕೀಟಗಳ ಚಟುವಟಿಕೆಯನ್ನು ಸನಿಹದಲ್ಲಿ ಹೋಳೆಯಲಾಗಿದೆ.',
     riskAwareFarmStrategy: 'ಝೌಕಿನ-ಸಚೇತ ಹೊಲದ ತಂತ್ರ',
@@ -424,9 +453,6 @@ const translations: Record<string, Record<string, string>> = {
     perMonth: '/ತಿಂಗಳು',
     hoursAgo: 'ಗಂಟೆಗಳ ಹಿಂದೆ',
     headingsHelp: 'ಸಹಾಯ',
-    
-    // Common
-    loading: 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
     save: 'ಉಳಿಸಿ',
     cancel: 'ರದ್ದು ಮಾಡಿ',
     delete: 'ಅಳಿಸು',
@@ -447,7 +473,7 @@ const translations: Record<string, Record<string, string>> = {
     language: 'மொழி',
     logout: 'வெளியேறு',
     settings: 'அமைப்புகள்',
-    
+
     // Sidebar
     overview: 'கண்ணோட்டம்',
     calendar: 'நாட்காட்டி',
@@ -458,21 +484,21 @@ const translations: Record<string, Record<string, string>> = {
     marketplace: 'சந்தை',
     subsidies: 'மானியம்',
     tutorial: 'பயிற்சி',
-    
+
     // Overview Tab
     farmName: 'பண்ணையின் பெயர்',
     farmLocation: 'இடம்',
     landArea: 'நிலப் பரப்பளவு',
     irrigationType: 'பாசன வகை',
     currentCrop: 'தற்போதைய பயிர்',
-    
+
     // Weather Panel
     temperature: 'வெப்பநிலை',
     humidity: 'ஈரப்பதம்',
     windSpeed: 'காற்றின் வேகம்',
     rainfall: 'மழைப்பொழிவு',
     weatherUnavailable: 'காலநிலை தரவு கிடைக்கவில்லை',
-    
+
     // Soil Panel
     soilMoisture: 'மண் ஈரப்பதம்',
     soilType: 'மண் வகை',
@@ -480,7 +506,7 @@ const translations: Record<string, Record<string, string>> = {
     phosphorus: 'பாஸ்பரஸ்',
     potassium: 'பொட்டாசியம்',
     soilUnavailable: 'மண் தரவு கிடைக்கவில்லை',
-    
+
     // Farm Map / Zones
     zones: 'மண்டலங்கள்',
     crop: 'பயிர்',
@@ -488,22 +514,22 @@ const translations: Record<string, Record<string, string>> = {
     status: 'நிலை',
     healthy: 'ஆரோக்கியமான',
     needsWater: 'நீர் தேவை',
-    fallow: 'வரா処்க்க',
+    fallow: 'வரா処்்த',
     scheduleIrrigation: 'பாசன அட்டவணை',
     logHarvest: 'அறுவடை பதிவு',
-    
+
     // AI Advisor
     askAdvisor: 'AI ஆலோசகரிடம் கேளுங்கள்',
     getCropSuggestions: 'பயிர் பரிந்துரைகளைப் பெறவும்',
     cropSuggestions: 'பயிர் பரிந்துரைகள்',
     irrigationLayout: 'பாசன இடமைப்பு',
     expectedYield: 'எதிர்பார்க்கப்பட்ட விளைச்சல்',
-    
+
     // Simulator
     simulateProfit: 'இலாபம் சிமுலேஷன்',
     yieldEstimate: 'விளைச்சல் மதிப்பீடு',
     profitEstimate: 'இலாப மதிப்பீடு',
-    
+
     // Marketplace
     sellProduce: 'விளைபொருளை விற்க',
     cropName: 'பயிரின் பெயர்',
@@ -511,27 +537,27 @@ const translations: Record<string, Record<string, string>> = {
     price: 'விலை',
     contact: 'தொடர்பு',
     postListing: 'பட்டியலை இடவும்',
-    
+
     // Subsidies
     eligibleSchemes: 'தகுந்த திட்டங்கள்',
     schemeName: 'திட்டத்தின் பெயர்',
     eligibility: 'தகுதி',
     benefits: 'நன்மைகள்',
-    
+
     // Tutorial Cards
     tutorialTitle: 'பண்ணை வழிகாட்டி',
     farmOverview: 'பண்ணையின் கண்ணோட்டம்',
     farmOverviewDesc: 'வெவ்வேறு பயிர்களுக்கான மண்டலங்களுடன் உங்கள் நிலப் பரிமாணம் பார்க்கவும்',
     weatherSoil: 'காலநிலை மற்றும் மண்',
     weatherSoilDesc: 'வானிலை முன்னறிவிப்பு மற்றும் மண் ஆரோக்கியத் தரவைச் சரிபார்க்கவும்',
-    aiAdviceDesc: 'ব்যক்তিगত பயிர் மற்றும் பாசன পরிந்துரைகளைப் பெறவும்',
+    aiAdviceDesc: 'ব்யக்তিगত பயிர் மற்றும் பாசன পরிந்துரைகளைப் பெறவும்',
     simulatorDesc: 'உங்கள் இலாபம் மற்றும் விளைச்சல் மதிப்பீடு செய்யவும்',
     marketplaceDesc: 'நேரடியாக பண்ணை விளைபொருளை வாங்க மற்றும் விற்க',
     subsidiesDesc: 'நீங்கள் தகுந்த அரசு திட்டங்களைக் கண்டறியவும்',
-    
+
     // Additional UI Strings
     farmVisualization: 'பண்ணை காட்சிப்படுத்தல்',
-    realtimeMonitoring: 'நிரந்தர மண்டল கண்காணிப்பு மற்றும் பாசன நிலை',
+    realtimeMonitoring: 'நிரந்தர மண்டல கண்காணிப்பு மற்றும் பாசன நிலை',
     currentWeather: 'தற்போதைய காலநிலை',
     wind: 'காற்று',
     soilHealth: 'மண் ஆரோக்கியம்',
@@ -545,7 +571,7 @@ const translations: Record<string, Record<string, string>> = {
     pestWarning: 'கீடு எச்சரிக்கை: மண்டலம் B',
     aphidActivity: 'அருகிலுள்ள பண்ணைகளில் (5 கிமீ ஆரம்) பசுமல் செயல்பாடு கண்டறியப்பட்டது. தடுப்பு தெளிப்பு பரிந்துரைக்கப்படுகிறது.',
     riskAwareFarmStrategy: 'ஆபத்து-விழிப்பு பண்ணை கூட்டக் கொள்கை',
-    simulateUncertainty: 'விதைப்பதற்கு முன் நிশ்சயமின்மையை உருவகமாக்கி, உயிர்வாழ்வு முடிவுகளை ஒப்பிடவும்.',
+    simulateUncertainty: 'விதைப்பதற்கு முன் நிश்சயமின்மையை உருவகமாக்கி, உயிர்வாழ்வு முடிவுகளை ஒப்பிடவும்.',
     startConsultation: 'உங்கள் பண்ணை ஆலோசனை தொடங்கவும்',
     consultationDesc: 'எங்கள் AI உங்கள் பண்ணையின் குறிப்பிட்ட நிலைமைகளை (மண், காலநிலை, மண்டலங்கள்) பகுப்பாய்வு செய்து, பரிந்துரைகளை தனிப்பயனாக்க சில கேள்விகளைக் கேட்கும்.',
     startAnalysis: 'பகுப்பாய்வு தொடங்கவும்',
@@ -565,9 +591,6 @@ const translations: Record<string, Record<string, string>> = {
     perMonth: '/மாத',
     hoursAgo: 'மணிநேரம் முன்',
     headingsHelp: 'உதவி',
-    
-    // Common
-    loading: 'ஏற்றுகிறது...',
     save: 'சேமிக்கவும்',
     cancel: 'ரத்து செய்',
     delete: 'அழிக்கவும்',
@@ -583,52 +606,6 @@ const translations: Record<string, Record<string, string>> = {
 export function t(lang: string | undefined, key: string) {
   const l = (lang || 'kn').split('-')[0];
   return (translations[l] && translations[l][key]) || translations['en'][key] || key;
-=======
-const strings: Record<string, Record<string, string>> = {
-  kn: {
-    greeting: 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ರಸ್ತೆಗಾರ ಸಲಹೆಗಾರ. ನಿಮ್ಮ ಭೂಮಿಯ ಮಾಹಿತಿಯನ್ನು ತಲುಪಿಸೋಣ.',
-    ask_location: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಭೂಮಿಯ ಸ್ಥಳವನ್ನು ಹೇಳಿ (ಉದಾಹರಣೆ: ಗ್ರಾಮ, ಜಿಲ್ಲ)',
-    ask_area: 'ಭೂಮಿಯ ಗಾತ್ರವನ್ನು ಎಕರೆಗಳಲ್ಲಿ ತಿಳಿಸಿ.',
-    ask_crop: 'ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಬೆಳೆ ಯಾವುದು?',
-    confirm: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಸೃಷ್ಟಿಸಲು "ದೃಢೀಕರಿಸಿ" ಕ್ಲಿಕ್ ಮಾಡಿ.',
-    listen: 'ಕೇಳಿ',
-    next: 'ಮುಂದೆ',
-    back: 'ಹಿಂದೆ',
-    confirm_btn: 'ದೃಢೀಕರಿಸಿ',
-    creating: 'ಭೂಮಿಯನ್ನು ಸೃಷ್ಟಿಸಲಾಗುತ್ತಿದೆ...',
-    created: 'ಭೂಮಿಯನ್ನು ಸೃಷ್ಟಿಸಲಾಗಿದೆ — ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸ್ವಾಗತ!'
-  },
-  hi: {
-    greeting: 'नमस्ते! मैं आपका कृषि सलाहकार हूँ। अपने खेत का विवरण बताइए।',
-    ask_location: 'कृपया अपने खेत का स्थान बताइए (गाँव/जिला)।',
-    ask_area: 'अपने खेत का आकार कितने एकड़ है?',
-    ask_crop: 'आप कौन सी फ़सल उगा रहे हैं?',
-    confirm: 'डैशबोर्ड बनाने के लिए "पुष्टि करें" दबाएँ।',
-    listen: 'सुनें',
-    next: 'आगे',
-    back: 'पीछे',
-    confirm_btn: 'पुष्टि करें',
-    creating: 'खेत बनाया जा रहा है...',
-    created: 'खेत बनाया गया — डैशबोर्ड पर आपका स्वागत है!'
-  },
-  en: {
-    greeting: 'Hello! I am your farm advisor. Let us collect your land details.',
-    ask_location: 'Please tell your farm location (village, district).',
-    ask_area: 'How many acres is your land?',
-    ask_crop: 'What crop are you currently growing?',
-    confirm: 'Tap "Confirm" to create your farm.',
-    listen: 'Listen',
-    next: 'Next',
-    back: 'Back',
-    confirm_btn: 'Confirm',
-    creating: 'Creating your farm...',
-    created: 'Farm created — welcome to the dashboard!'
-  }
-};
-
-export function t(lang: string, key: string) {
-  return (strings[lang] && strings[lang][key]) || strings['kn'][key] || key;
->>>>>>> 5704ac7 (New Commit)
 }
 
 export default { t };
