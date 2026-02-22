@@ -11,12 +11,12 @@ import { Card, StatCard } from './components/ui/Card';
 import { Modal } from './components/ui/Modal';
 import { LandForm } from './components/LandForm';
 import VoiceOnboard from './components/VoiceOnboard';
-import VoiceButton from './components/ui/VoiceButton';
 import { t } from './i18n';
 import { FarmSimulator } from './components/FarmSimulator';
 import { SocialFeed } from './components/SocialFeed';
 import VoiceErrorBanner from './components/ui/VoiceErrorBanner';
 import Tutorial from './components/Tutorial';
+import VoiceAssistant from './components/VoiceAssistant';
 
 
 // Types
@@ -104,6 +104,7 @@ export default function App() {
     const handleSubsidy = () => setActiveTab('subsidies');
     const handleCalendar = () => setActiveTab('calendar');
     const handleAdvisor = () => setActiveTab('ai-suggestions');
+    const handleTutorial = () => setActiveTab('tutorial');
 
     window.addEventListener('open-weather', handleWeather);
     window.addEventListener('open-crop', handleCrop);
@@ -113,6 +114,7 @@ export default function App() {
     window.addEventListener('open-subsidy', handleSubsidy);
     window.addEventListener('open-calendar', handleCalendar);
     window.addEventListener('open-advisor', handleAdvisor);
+    window.addEventListener('open-tutorial', handleTutorial);
 
     return () => {
       window.removeEventListener('open-weather', handleWeather);
@@ -123,6 +125,7 @@ export default function App() {
       window.removeEventListener('open-subsidy', handleSubsidy);
       window.removeEventListener('open-calendar', handleCalendar);
       window.removeEventListener('open-advisor', handleAdvisor);
+      window.removeEventListener('open-tutorial', handleTutorial);
     };
   }, []);
 
@@ -690,10 +693,7 @@ export default function App() {
             <div className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white shadow-md overflow-hidden">
               <img src="https://picsum.photos/seed/farmer/200/200" alt="Profile" className="w-full h-full object-cover" />
             </div>
-            <div className="hidden md:flex items-center gap-3">
-              <div className={`w-2 h-2 rounded-full ${voiceActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-300'}`} title={voiceActive ? 'Voice playing' : 'Voice idle'} />
-              <VoiceButton lang={lang} className="hidden lg:inline-flex" text={t(lang, 'greeting')} />
-            </div>
+
           </div>
         </header>
 
@@ -1267,6 +1267,9 @@ export default function App() {
           </div>
         )}
       </Modal>
+
+      {/* Floating multilingual voice assistant */}
+      <VoiceAssistant lang={lang} />
     </div >
   );
 }
